@@ -1,0 +1,28 @@
+{
+  "name": "@lazymonkey/grid-engine-demo",
+  "private": "true",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "author": "fitz-i@foxmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@lazymonkey/grid-engine-rc": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.14",
+    "parcel": "^2.6.2"
+  },
+  "targets": {
+    "default": {
+      "context": "browser",
+      "sourceMap": false,
+      "publicUrl": "./"
+    }
+  }
+}

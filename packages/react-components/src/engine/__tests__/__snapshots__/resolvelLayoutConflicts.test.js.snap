@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[
+  `错误数据校正处理：有冲突情况 1`
+] = `"[[2,{\\"left\\":8,\\"top\\":0,\\"width\\":8,\\"height\\":8}],[3,{\\"left\\":0,\\"top\\":0,\\"width\\":8,\\"height\\":8}],[\\"1\\",{\\"top\\":0,\\"left\\":16,\\"width\\":8,\\"height\\":8}]]"`;
