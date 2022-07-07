@@ -20,7 +20,7 @@
   },
   "targets": {
     "default": {
-      "distDir":"../../",
+      "distDir": "../../docs",
       "context": "browser",
       "sourceMap": false,
       "publicUrl": "./"
