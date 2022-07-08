@@ -1,12 +1,12 @@
 import React from 'react';
-import GridEngine from '@lazymonkey/grid-engine-rc';
+import { useElementMoveHandler } from '@lazymonkey/grid-engine-rc';
 
 const Card: React.FC = () => {
-  const mouseDownHandler = GridEngine.useElementMoveHandler();
+  const mouseDownHandler = useElementMoveHandler();
 
   return (
-    <div style={{ height: '100%', position: 'relative' }} onMouseDown={mouseDownHandler}>
-      <div style={{ position: 'absolute', top: 6, bottom: 6, left: 6, right: 6, backgroundColor: '#f1f1f1' }}></div>
+    <div className="h-full relative" onMouseDown={mouseDownHandler}>
+      <div className="absolute inset-0 bg-purple-200"></div>
     </div>
   );
 };

@@ -1,0 +1,183 @@
+.bi-layout-canvas {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.bi-layout-canvas-track {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.bi-layout-element {
+  user-select: none;
+  background: #fff;
+  border: 1px solid #0000;
+  position: absolute;
+}
+
+.bi-layout-element:not(.__active) {
+  transition: all .3s;
+}
+
+.bi-layout-element.__active {
+  z-index: 90;
+  border-color: #a855f7;
+}
+
+.bi-layout-element-children {
+  height: 100%;
+  position: relative;
+}
+
+.bi-layout-resize-indicator {
+  user-select: none;
+  background: #a855f74d;
+  position: absolute;
+}
+
+.bi-layout-resize-indicator.__active {
+  cursor: move;
+  z-index: 97;
+  background: #a855f71a;
+  border: 1px solid #a855f7;
+}
+
+.bi-layout-resize-anchor-nw {
+  z-index: 100;
+  width: 8px;
+  height: 8px;
+  cursor: nw-resize;
+  background: #a855f7;
+  position: absolute;
+  top: -4px;
+  left: -4px;
+}
+
+.bi-layout-resize-anchor-n {
+  z-index: 100;
+  width: 8px;
+  height: 8px;
+  cursor: n-resize;
+  background: #a855f7;
+  margin-left: -4px;
+  position: absolute;
+  top: -4px;
+  left: 50%;
+}
+
+.bi-layout-resize-anchor-ne {
+  z-index: 100;
+  width: 8px;
+  height: 8px;
+  cursor: ne-resize;
+  background: #a855f7;
+  position: absolute;
+  top: -4px;
+  right: -4px;
+}
+
+.bi-layout-resize-anchor-e {
+  z-index: 100;
+  width: 8px;
+  height: 8px;
+  cursor: e-resize;
+  background: #a855f7;
+  margin-top: -4px;
+  position: absolute;
+  top: 50%;
+  right: -4px;
+}
+
+.bi-layout-resize-anchor-se {
+  z-index: 100;
+  width: 8px;
+  height: 8px;
+  cursor: se-resize;
+  background: #a855f7;
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+}
+
+.bi-layout-resize-anchor-s {
+  z-index: 100;
+  width: 8px;
+  height: 8px;
+  cursor: s-resize;
+  background: #a855f7;
+  margin-left: -4px;
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+}
+
+.bi-layout-resize-anchor-sw {
+  z-index: 100;
+  width: 8px;
+  height: 8px;
+  cursor: sw-resize;
+  background: #a855f7;
+  position: absolute;
+  bottom: -4px;
+  left: -4px;
+}
+
+.bi-layout-resize-anchor-w {
+  z-index: 100;
+  width: 8px;
+  height: 8px;
+  cursor: w-resize;
+  background: #a855f7;
+  margin-top: -4px;
+  position: absolute;
+  top: 50%;
+  left: -4px;
+}
+
+.canvas-move-indicator-top {
+  z-index: 99;
+  height: 6px;
+  cursor: n-resize;
+  position: absolute;
+  top: -6px;
+  left: 0;
+  right: 0;
+}
+
+.canvas-move-indicator-right {
+  z-index: 99;
+  width: 6px;
+  cursor: e-resize;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -6px;
+}
+
+.canvas-move-indicator-bottom {
+  z-index: 99;
+  height: 6px;
+  cursor: s-resize;
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  right: 0;
+}
+
+.canvas-move-indicator-left {
+  z-index: 99;
+  width: 6px;
+  cursor: w-resize;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -6px;
+}
+
+/*# sourceMappingURL=index.4a53bc01.css.map */

@@ -10,12 +10,14 @@
   "author": "fitz-i@foxmail.com",
   "license": "MIT",
   "dependencies": {
+    "@lazymonkey/grid-engine-rc": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@lazymonkey/grid-engine-rc": "workspace:*"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.14",
+    "@types/uuid": "^8.3.4",
     "parcel": "^2.6.2"
   },
   "targets": {

@@ -1,6 +1,7 @@
 import React from 'react';
-import GridEngine from '@lazymonkey/grid-engine-rc';
+import { Canvas, Element, GridEngine } from '@lazymonkey/grid-engine-rc';
 import Card from './Card';
+import { v4 as uuidv4 } from 'uuid';
 
 const defaultLayouts = {
   a: { width: 10, height: 10, left: 0, top: 0 },
@@ -9,34 +10,49 @@ const defaultLayouts = {
 };
 
 export default function App() {
-  const modelRef = React.useRef<any>();
-  const [layouts, setLayout] = React.useState<any>(defaultLayouts);
-  const [cards, setCards] = React.useState<string[]>(() => Object.keys(defaultLayouts));
+  const modelRef = React.useRef<GridEngine>();
+  const [layouts, setLayout] = React.useState<GridEngine.Layouts>(defaultLayouts);
 
   if (!modelRef.current) {
-    modelRef.current = GridEngine.createEngine();
-    modelRef.current.reset(defaultLayouts);
+    modelRef.current = new GridEngine();
+    modelRef.current.fromJSON(defaultLayouts);
   }
 
-  // console.log(layouts);
+  const addHandler = () => {
+    const id = uuidv4();
+    modelRef.current!.add(id, { width: 10, height: 10 });
+  };
 
   React.useEffect(() => {
-    return modelRef.current.subscribe(() => {
-      const _layouts = modelRef.current.toJSON();
+    return modelRef.current!.subscribe(() => {
+      const _layouts = modelRef.current!.toJSON();
       setLayout(_layouts);
     });
   }, []);
 
+  const els = React.useMemo(() => Object.entries(layouts), [layouts]);
+
   return (
     <div>
-      <h1>Grid</h1>
-      <GridEngine.Canvas bgVisible style={{ width: '100%', minHeight: '100vh' }}>
-        {cards.map(card => (
-          <GridEngine.Element id={card} key={card} layout={layouts[card]} onLayoutChange={modelRef.current.setLayout}>
+      <div className="flex justify-between items-center  p-6">
+        <h1 className="text-4xl">Grid</h1>
+        <div>
+          <button
+            className="bg-slate-50 hover:bg-slate-200 active:bg-slate-100 p-1 px-2 rounded-sm text-gray-500"
+            onClick={addHandler}
+          >
+            Add +
+          </button>
+        </div>
+      </div>
+
+      <Canvas bg style={{ width: '100%', minHeight: '100vh' }}>
+        {els.map(([id, layout]) => (
+          <Element id={id} key={id} layout={layout} onLayoutChange={modelRef.current?.setRect}>
             <Card />
-          </GridEngine.Element>
+          </Element>
         ))}
-      </GridEngine.Canvas>
+      </Canvas>
     </div>
   );
 }
