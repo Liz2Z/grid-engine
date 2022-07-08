@@ -14,26 +14,44 @@ importers:
     specifiers:
       '@lazymonkey/grid-engine-rc': workspace:*
       '@types/react': ^18.0.14
+      '@types/uuid': ^8.3.4
       parcel: ^2.6.2
       react: ^18.2.0
       react-dom: ^18.2.0
+      uuid: ^8.3.2
     dependencies:
       '@lazymonkey/grid-engine-rc': link:../react-components
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      uuid: 8.3.2
     devDependencies:
       '@types/react': 18.0.15
+      '@types/uuid': 8.3.4
       parcel: 2.6.2
+
+  packages/engine:
+    specifiers:
+      '@lazymonkey/grid-engine-utils': workspace:*
+    dependencies:
+      '@lazymonkey/grid-engine-utils': link:../utils
 
   packages/react-components:
     specifiers:
+      '@lazymonkey/grid-engine': workspace:*
+      '@lazymonkey/grid-engine-utils': workspace:*
       classnames: ^2.3.1
       react: ^18.2.0
       react-dom: ^18.2.0
+    dependencies:
+      '@lazymonkey/grid-engine': link:../engine
+      '@lazymonkey/grid-engine-utils': link:../utils
     devDependencies:
       classnames: 2.3.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+
+  packages/utils:
+    specifiers: {}
 
 packages:
 
@@ -1147,6 +1165,10 @@ packages:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
     dev: true
 
+  /@types/uuid/8.3.4:
+    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
+    dev: true
+
   /abortcontroller-polyfill/1.7.3:
     resolution: {integrity: sha512-zetDJxd89y3X99Kvo4qFx8GKlt6GsvN3UcRZHwU6iFA/0KiOmhkTVhe8oRoTBiTVPZu09x3vCra47+w8Yz1+2Q==}
     dev: true
@@ -1948,6 +1970,11 @@ packages:
     resolution: {integrity: sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==}
     engines: {node: '>= 4'}
     dev: true
+
+  /uuid/8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
 
   /v8-compile-cache/2.3.0:
     resolution: {integrity: sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==}

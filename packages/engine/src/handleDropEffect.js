@@ -1,7 +1,7 @@
-import createMatrix from '../matrix/createMatrix';
-import { transformBlockTop } from '../matrix/transform';
+import createMatrix from './matrix/createMatrix';
+import { transformBlockTop } from './matrix/transform';
 import sortRects from './sortRects';
-import forEachTwoDimensionalArray from '../shared/forEachTwoDimensionalArray';
+import forEachTwoDimensionalArray from '@lazymonkey/grid-engine-utils/forEachTwoDimensionalArray';
 
 /**
  * 检测空白行

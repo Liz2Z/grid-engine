@@ -1,12 +1,9 @@
 import { useEffect, useRef, useCallback } from 'react';
-import noWork from '../shared/noWork';
+import noWork from '@lazymonkey/grid-engine-utils/noWork';
 
 type MouseEventHandler = (event: MouseEvent) => void;
 
-type MouseMoveHandler = (
-  event: MouseEvent,
-  distance: { directionX: number; directionY: number }
-) => void;
+type MouseMoveHandler = (event: MouseEvent, distance: { directionX: number; directionY: number }) => void;
 
 interface EventHandlers {
   onMouseDown?: MouseEventHandler;
@@ -88,7 +85,7 @@ export default function useMouseEvent({
       document.addEventListener('mouseup', mouseUpHandler);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   return mouseDownHandler;

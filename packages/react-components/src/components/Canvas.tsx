@@ -2,8 +2,8 @@ import React, { useCallback, useRef, useState } from 'react';
 import classNames from 'classnames';
 import useElementSizeObserver from '../hooks/useElementSizeObserver';
 import Element from './Element';
-import { NUMBER_OF_COLOMUS /* NUMBER_OF_ROWS */ } from '../constants';
-import noWork from '../shared/noWork';
+import { NUMBER_OF_COLOMUS /* NUMBER_OF_ROWS */ } from '@lazymonkey/grid-engine/src/constants';
+import noWork from '@lazymonkey/grid-engine-utils/noWork';
 import CanvasBackground from './CanvasBackground';
 
 type ElementType = typeof Element;
@@ -11,7 +11,7 @@ type ElementType = typeof Element;
 interface CanvasProps {
   onMount?: (size: { cellHeight: number; cellWidth: number }) => void;
   children: React.ReactElement<any, ElementType> | React.ReactElement<any, ElementType>[];
-  bgVisible?: boolean;
+  bg?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -24,7 +24,7 @@ export interface ContainerRect {
   rowCount: number;
 }
 
-const Canvas = ({ children, onMount = noWork, bgVisible = false, className, style }: CanvasProps) => {
+const Canvas = ({ children, onMount = noWork, bg = false, className, style }: CanvasProps) => {
   const isObserving = useRef<boolean>(false);
   const [containerRect, setContainerRect] = useState<ContainerRect>();
   const [isWorking, setIsWorking] = useState<boolean>(false);
@@ -114,7 +114,7 @@ const Canvas = ({ children, onMount = noWork, bgVisible = false, className, styl
         {content}
       </div>
 
-      {containerRect && bgVisible ? <CanvasBackground offsetTop={scrollTop} containerInfo={containerRect} /> : null}
+      {containerRect && bg ? <CanvasBackground offsetTop={scrollTop} containerInfo={containerRect} /> : null}
 
       {/* 当有子元素开始拖拽，或重置大小时，显示蒙版，不让鼠标与其它元素产生交互事件而影响执行效率 */}
       {isWorking && (

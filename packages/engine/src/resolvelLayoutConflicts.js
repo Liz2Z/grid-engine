@@ -125,6 +125,7 @@ export default function resolvelLayoutConflicts(rects, conflictHandler) {
   }
 
   const copyedRects = new Map(rects);
+  
   const conflicts = flushInvalidRelationship(relationship, copyedRects);
 
   let result = copyedRects;

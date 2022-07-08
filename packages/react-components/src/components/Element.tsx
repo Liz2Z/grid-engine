@@ -6,9 +6,9 @@
 
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import cn from 'classnames';
-import noWork from '../shared/noWork';
+import noWork from '@lazymonkey/grid-engine-utils/noWork';
 import { ContainerRect } from './Canvas';
-import diffObjectValues from '../shared/diffObjectValues';
+import diffObjectValues from '@lazymonkey/grid-engine-utils/diffObjectValues';
 import ResizeIndicator from './ResizeIndicator';
 import useResizeSingnal from '../hooks/useResizeSingnal';
 import useElementMoveHandler from '../hooks/useElementMoveHandler';
@@ -18,8 +18,8 @@ import { layoutUnitToStyleUnit, styleUnitToLayoutUnit } from './unitConvert';
 import { IsWorkingContext } from '../apiHooks/useIsWorking';
 import { ElementResizeContext } from '../apiHooks/useElementResize';
 import { ElementMoveInteraction } from '../apiHooks/useElementMoveHandler';
-import { Rect } from '../engine/types';
-import { ELEMENT_SPACING } from '../constants';
+import { Rect } from '../../../engine/src/types';
+import { ELEMENT_SPACING } from '@lazymonkey/grid-engine/src/constants';
 
 /**
  * 用来表示元素在Canvas位置的类型。

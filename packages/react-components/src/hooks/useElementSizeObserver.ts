@@ -1,5 +1,5 @@
 import { useCallback, useRef, useEffect } from 'react';
-import observeElementSize from '../shared/elementSizeObserver';
+import observeElementSize from '@lazymonkey/grid-engine-utils/elementSizeObserver';
 import useMountedState from './useMountedState';
 
 /**

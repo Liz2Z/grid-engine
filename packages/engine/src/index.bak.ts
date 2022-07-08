@@ -1,12 +1,13 @@
-import diffObjectValues from '../shared/diffObjectValues';
+// @ts-nocheck
+import diffObjectValues from '@lazymonkey/grid-engine-utils/diffObjectValues';
+import noWork from '@lazymonkey/grid-engine-utils/noWork';
 import performAutoLayout from './performAutoLayout';
 import handleNodeRemove from './handleNodeRemove';
 import resolvelLayoutConflicts from './resolvelLayoutConflicts';
 import appendElement from './appendElement';
 import correctLayouts from './correctLayouts';
-import noWork from '../shared/noWork';
 import { Rect, Layouts, Rects, Size } from './types';
-import { DEFAULT_SIZE } from '../constants';
+import { DEFAULT_SIZE } from './constants';
 
 interface VoidFn {
   (): void;

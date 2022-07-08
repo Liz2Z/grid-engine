@@ -1,20 +1,9 @@
 import './components/style.less';
-import Canvas from './components/Canvas';
-import Element from './components/Element';
-import createEngine from './engine';
-import useIsWorking from './apiHooks/useIsWorking';
-import useElementSize from './apiHooks/useElementSize';
-import useElementResize from './apiHooks/useElementResize';
-import useElementMoveHandler from './apiHooks/useElementMoveHandler';
 
-const LayoutEngine = {
-  Canvas,
-  Element,
-  createEngine,
-  useIsWorking,
-  useElementSize,
-  useElementResize,
-  useElementMoveHandler,
-};
-
-export default LayoutEngine;
+export { default as Canvas } from './components/Canvas';
+export { default as Element } from './components/Element';
+export { default as GridEngine } from '@lazymonkey/grid-engine';
+export { default as useIsWorking } from './apiHooks/useIsWorking';
+export { default as useElementSize } from './apiHooks/useElementSize';
+export { default as useElementResize } from './apiHooks/useElementResize';
+export { default as useElementMoveHandler } from './apiHooks/useElementMoveHandler';

@@ -2,9 +2,9 @@
  * FIXME: 是否可以使用纯数学的方法解决
  *
  *  */
-import { NUMBER_OF_COLOMUS } from '../constants';
-import createMatrix from '../matrix/createMatrix';
-import createLinkedList from '../linkedList';
+import { NUMBER_OF_COLOMUS } from './constants';
+import createMatrix from './matrix/createMatrix';
+import createLinkedList from './linkedList';
 
 // 默认长36的Int8Array
 const zeroArray = new Int8Array(NUMBER_OF_COLOMUS);

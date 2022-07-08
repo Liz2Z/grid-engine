@@ -1,5 +1,5 @@
 import computeRectSpace from '../computeRectSpace';
-import { DEFAULT_ELEMENT_HEIGHT, DEFAULT_ELEMENT_WIDTH } from '../../constants';
+import { DEFAULT_ELEMENT_HEIGHT, DEFAULT_ELEMENT_WIDTH } from '../../../react-components/src/constants';
 
 const layouts = [
   [

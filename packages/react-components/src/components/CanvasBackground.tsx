@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useRef } from 'react';
-import { NUMBER_OF_COLOMUS } from '../constants';
+import { NUMBER_OF_COLOMUS } from '@lazymonkey/grid-engine/src/constants';
 import useDebounce from '../hooks/useDebounce';
 import { ContainerRect } from './Canvas';
 
@@ -31,7 +31,7 @@ const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ offsetTop, containe
     const _width = Math.round(cellWidth - spacing * 2);
     const _height = Math.round(cellHeight - spacing * 2);
 
-    context.fillStyle = '#f1f1f1';
+    context.fillStyle = '#fafafa';
 
     for (let i = 0; i < rowCountPlus; i += 1) {
       for (let j = 0; j < NUMBER_OF_COLOMUS; j += 1) {

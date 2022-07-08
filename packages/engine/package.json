@@ -1,0 +1,17 @@
+{
+  "name": "@lazymonkey/grid-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fitz-i@foxmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "@lazymonkey/grid-engine-utils": "workspace:*"
+  },
+  "bundledDependencies": [
+    "@lazymonkey/grid-engine-utils"
+  ]
+}

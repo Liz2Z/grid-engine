@@ -1,5 +1,5 @@
 import correctLayouts from '../correctLayouts';
-import { DEFAULT_ELEMENT_HEIGHT, DEFAULT_ELEMENT_WIDTH } from '../../constants';
+import { DEFAULT_ELEMENT_HEIGHT, DEFAULT_ELEMENT_WIDTH } from '../../../react-components/src/constants';
 
 test('布局数据校正', () => {
   const layouts = {

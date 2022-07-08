@@ -8,6 +8,14 @@
   },
   "author": "fitz-i@foxmail.com",
   "license": "MIT",
+  "bundledDependencies": [
+    "@lazymonkey/grid-engine",
+    "@lazymonkey/grid-engine-utils"
+  ],
+  "dependencies": {
+    "@lazymonkey/grid-engine": "workspace:*",
+    "@lazymonkey/grid-engine-utils": "workspace:*"
+  },
   "devDependencies": {
     "classnames": "^2.3.1",
     "react": "^18.2.0",

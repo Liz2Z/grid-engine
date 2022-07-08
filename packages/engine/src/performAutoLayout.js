@@ -7,14 +7,12 @@ import handleCollisionEffect from './handleCollisionEffect';
  */
 export default function performAutoLayout(rects, movedId, movedRect) {
   let result = new Map(rects);
+
   result.set(movedId, movedRect);
 
   // 检测操作类型
   const prevRect = rects.get(movedId);
-  const [shouldDetectCollision, shouldDetectDrop] = operationDetect(
-    prevRect,
-    movedRect
-  );
+  const [shouldDetectCollision, shouldDetectDrop] = operationDetect(prevRect, movedRect);
 
   if (shouldDetectCollision) {
     // 元素移动过程中发生碰撞

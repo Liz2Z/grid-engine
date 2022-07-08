@@ -1,5 +1,5 @@
 import computeRectSpace from './computeRectSpace';
-import { DEFAULT_SIZE } from '../constants';
+import { DEFAULT_SIZE } from './constants';
 
 /**
  * 添加节点
