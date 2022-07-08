@@ -25201,6 +25201,9 @@ const defaultLayouts = {
         top: 10
     }
 };
+const getRandom = ()=>{
+    return Math.floor(Math.random() * 12) + 3;
+};
 function App() {
     _s();
     const modelRef = _reactDefault.default.useRef();
@@ -25212,8 +25215,8 @@ function App() {
     const addHandler = ()=>{
         const id = _uuid.v4();
         modelRef.current.add(id, {
-            width: 10,
-            height: 10
+            width: getRandom(),
+            height: getRandom()
         });
     };
     _reactDefault.default.useEffect(()=>{
@@ -25236,7 +25239,7 @@ function App() {
                         children: "Grid"
                     }, void 0, false, {
                         fileName: "packages/demo/src/App.tsx",
-                        lineNumber: 38,
+                        lineNumber: 43,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ _jsxDevRuntime.jsxDEV("div", {
@@ -25246,18 +25249,18 @@ function App() {
                             children: "Add +"
                         }, void 0, false, {
                             fileName: "packages/demo/src/App.tsx",
-                            lineNumber: 40,
+                            lineNumber: 45,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "packages/demo/src/App.tsx",
-                        lineNumber: 39,
+                        lineNumber: 44,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "packages/demo/src/App.tsx",
-                lineNumber: 37,
+                lineNumber: 42,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_gridEngineRc.Canvas, {
@@ -25272,24 +25275,24 @@ function App() {
                         onLayoutChange: modelRef.current?.setRect,
                         children: /*#__PURE__*/ _jsxDevRuntime.jsxDEV(_cardDefault.default, {}, void 0, false, {
                             fileName: "packages/demo/src/App.tsx",
-                            lineNumber: 52,
+                            lineNumber: 57,
                             columnNumber: 13
                         }, this)
                     }, id, false, {
                         fileName: "packages/demo/src/App.tsx",
-                        lineNumber: 51,
+                        lineNumber: 56,
                         columnNumber: 11
                     }, this)
                 )
             }, void 0, false, {
                 fileName: "packages/demo/src/App.tsx",
-                lineNumber: 49,
+                lineNumber: 54,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "packages/demo/src/App.tsx",
-        lineNumber: 36,
+        lineNumber: 41,
         columnNumber: 5
     }, this);
 }

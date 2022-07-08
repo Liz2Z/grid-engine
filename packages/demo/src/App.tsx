@@ -9,6 +9,10 @@ const defaultLayouts = {
   c: { width: 10, height: 15, left: 10, top: 10 },
 };
 
+const getRandom = () => {
+  return Math.floor(Math.random() * 12) + 3;
+};
+
 export default function App() {
   const modelRef = React.useRef<GridEngine>();
   const [layouts, setLayout] = React.useState<GridEngine.Layouts>(defaultLayouts);
@@ -20,7 +24,8 @@ export default function App() {
 
   const addHandler = () => {
     const id = uuidv4();
-    modelRef.current!.add(id, { width: 10, height: 10 });
+
+    modelRef.current!.add(id, { width: getRandom(), height: getRandom() });
   };
 
   React.useEffect(() => {
