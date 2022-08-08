@@ -26,7 +26,7 @@ export default function resolveLayouts(layouts, notLayoutHandler) {
     // 遍历notLayoutIds，并依次执行appendElement
     notLayoutIds.forEach(id => {
       if (!notLayoutHandler) {
-        result = appendElement(id, result, size);
+        result = appendElement(id, result);
       } else {
         // 依次触发 notLayoutHandler， 并传入当前元素 id，及回调函数
         // 用户可以选择是否调用回调函数将当前元素添加进布局

@@ -18,8 +18,8 @@ import { layoutUnitToStyleUnit, styleUnitToLayoutUnit } from './unitConvert';
 import { IsWorkingContext } from '../apiHooks/useIsWorking';
 import { ElementResizeContext } from '../apiHooks/useElementResize';
 import { ElementMoveInteraction } from '../apiHooks/useElementMoveHandler';
-import { Rect } from '../../../engine/src/types';
 import { ELEMENT_SPACING } from '@lazymonkey/grid-engine/src/constants';
+import GridEngine from '@lazymonkey/grid-engine';
 
 /**
  * 用来表示元素在Canvas位置的类型。
@@ -65,7 +65,7 @@ export interface ElementProps {
   children?: React.ReactNode;
   minWidth?: number;
   minHeight?: number;
-  onLayoutChange?: (id: string, rect: Rect) => void;
+  onLayoutChange?: (id: string, rect: GridEngine.Rect) => void;
   onWorking?: (isWorking: boolean) => void;
 }
 
