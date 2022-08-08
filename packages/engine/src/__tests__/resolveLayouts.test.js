@@ -1,5 +1,6 @@
-import correctLayouts from '../correctLayouts';
-import { DEFAULT_ELEMENT_HEIGHT, DEFAULT_ELEMENT_WIDTH } from '../../../react-components/src/constants';
+import resolveLayouts from '../resolveLayouts';
+const DEFAULT_ELEMENT_HEIGHT = 8;
+const DEFAULT_ELEMENT_WIDTH = 8;
 
 test('布局数据校正', () => {
   const layouts = {
@@ -23,5 +24,5 @@ test('布局数据校正', () => {
 
   const layoutsMap = new Map(Object.entries(correctedLayouts));
 
-  expect(correctLayouts(layouts)).toEqual(layoutsMap);
+  expect(resolveLayouts(layouts)).toEqual(layoutsMap);
 });

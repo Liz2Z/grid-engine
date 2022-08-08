@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "author": "fitz-i@foxmail.com",
   "license": "MIT",
+  "scripts": {
+    "start": "cd packages/demo && pnpm run start"
+  },
   "devDependencies": {
     "@parcel/transformer-less": "2.4.1",
     "typescript": "^4.7.4"

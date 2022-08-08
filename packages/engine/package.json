@@ -13,5 +13,10 @@
   },
   "bundledDependencies": [
     "@lazymonkey/grid-engine-utils"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.12.0",
+    "@babel/preset-typescript": "^7.18.6",
+    "jest": "^28.1.3"
+  }
 }
