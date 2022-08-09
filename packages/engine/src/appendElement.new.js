@@ -1,4 +1,4 @@
-import computeRectSpace from './computeRectSpace';
+import computeRectSpace from './computeRectSpace.new';
 import { DEFAULT_SIZE } from './constants';
 
 /**

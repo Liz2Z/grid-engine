@@ -87,6 +87,7 @@ export const fillMatrix = (matrix: number[], fill: 0 | 1, left: number, top: num
   if (fill === 1) {
     return fillMatrixWith_1(matrix, left, top, width, height);
   }
+
   return fillMatrixWith_0(matrix, left, top, width, height);
 };
 

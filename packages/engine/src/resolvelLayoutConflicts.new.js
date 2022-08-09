@@ -2,8 +2,8 @@
  * 校正程序
  * */
 import rectangleCollisionDetect from './rectangleCollisionDetect';
-import handleDropEffect from './handleDropEffect';
-import appendElement from './appendElement';
+import handleDropEffect from './handleDropEffect.new';
+import appendElement from './appendElement.new';
 
 /**
  * 根据key从map中获取value，如果不存在，则创建
