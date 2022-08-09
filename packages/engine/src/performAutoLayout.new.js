@@ -12,6 +12,7 @@ export default function performAutoLayout(rects, movedId, movedRect) {
 
   // 检测操作类型
   const prevRect = rects.get(movedId);
+
   const [shouldDetectCollision, shouldDetectDrop] = operationDetect(prevRect, movedRect);
 
   if (shouldDetectCollision) {

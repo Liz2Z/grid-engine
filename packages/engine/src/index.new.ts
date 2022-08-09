@@ -67,13 +67,14 @@ class GridEngine extends Broadcast {
       return this;
     }
 
-    const rectNotChanged = diffObjectValues(prevRect, nextRect);
+    const rectHasChanged = diffObjectValues(prevRect, nextRect);
 
-    if (!rectNotChanged) {
+    if (!rectHasChanged) {
       return this;
     }
 
     this.rects = performAutoLayout(this.rects, stringId, nextRect);
+
     this.emit('layout:changed');
     return this;
   };
