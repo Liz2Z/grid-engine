@@ -1,12 +1,12 @@
 import React from 'react';
 import { Canvas, Element, GridEngine } from '@lazymonkey/grid-engine-rc';
 import Card from './Card';
-import { v4 as uuidv4 } from 'uuid';
+import humanId from 'human-id';
 
 const defaultLayouts = {
-  a: { width: 10, height: 10, left: 0, top: 0 },
-  b: { width: 10, height: 5, left: 10, top: 0 },
-  c: { width: 10, height: 15, left: 10, top: 10 },
+  大A: { width: 10, height: 10, left: 0, top: 0 },
+  大B: { width: 10, height: 5, left: 10, top: 0 },
+  小c: { width: 10, height: 15, left: 10, top: 10 },
 };
 
 const getRandom = () => {
@@ -23,7 +23,7 @@ export default function App() {
   }
 
   const addHandler = () => {
-    const id = uuidv4();
+    const id = humanId('~');
 
     modelRef.current!.add(id, { width: getRandom(), height: getRandom() });
   };
@@ -54,7 +54,7 @@ export default function App() {
       <Canvas bg style={{ width: '100%', minHeight: '100vh' }}>
         {els.map(([id, layout]) => (
           <Element id={id} key={id} layout={layout} onLayoutChange={modelRef.current?.setRect}>
-            <Card />
+            <Card>{id}</Card>
           </Element>
         ))}
       </Canvas>
