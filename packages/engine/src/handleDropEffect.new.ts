@@ -1,7 +1,6 @@
 import createMatrix, { RectInMatrix } from './matrix/createMatrix.new';
 import { transformBlockTop } from './matrix/transform.new';
-import sortRects from './sortRects';
-import forEachTwoDimensionalArray from '@lazymonkey/grid-engine-utils/forEachTwoDimensionalArray';
+import sortRects from './sortRects.new';
 import getBitLine from './matrix/getBitLine';
 import { bitWiseAnd, bitWiseXOr } from './operators';
 
@@ -51,13 +50,16 @@ function nodeDropDetect(matrix: number[], bitLine: number, lineIndex: number) {
  * */
 // TODO 可以继续优化
 export default function handleDropEffect(rects: Map<string, RectInMatrix>) {
-  const matrix = createMatrix(rects);
-  const sortedRects: [string, RectInMatrix][][] = sortRects(rects);
+  const sortedRects: [string, RectInMatrix][] = sortRects(rects);
 
-  forEachTwoDimensionalArray(sortedRects, ([id, rect]: [string, RectInMatrix]) => {
+  const matrix = createMatrix(rects);
+
+  for (let i = 0, len = sortedRects.length; i < len; i += 1) {
+    const [id, rect] = sortedRects[i];
+
     // 排除掉已经处于顶端的
     if (rect.top <= 0) {
-      return;
+      continue;
     }
 
     // 掉落检测后的 新定位信息
@@ -65,8 +67,7 @@ export default function handleDropEffect(rects: Map<string, RectInMatrix>) {
     const newTop = nodeDropDetect(matrix, bitLine, rect.top - 1);
 
     if (newTop === rect.top) {
-      // 没有发生变化，无需进行更新操作
-      return;
+      continue;
     }
 
     const newRect = {
@@ -76,8 +77,8 @@ export default function handleDropEffect(rects: Map<string, RectInMatrix>) {
 
     rects.set(id, newRect);
 
-    transformBlockTop(matrix, rect, newRect);
-  });
+    transformBlockTop(matrix, rect, newRect, id);
+  }
 
   return rects;
 }
