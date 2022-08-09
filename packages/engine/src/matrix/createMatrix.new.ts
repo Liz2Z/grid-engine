@@ -2,7 +2,8 @@ import { NUMBER_OF_COLOMUS } from '../constants';
 import { bitWiseAnd, bitWiseOr } from '../operators';
 import getBitLine from './getBitLine';
 
-let currentId: string;
+export const currentIdRef: { current: undefined | string } = { current: undefined };
+export const fromRef: { current: undefined | string } = { current: undefined };
 
 const fillMatrixWith_1 = (matrix: number[], left: number, top: number, width: number, height: number) => {
   let y = top;
@@ -13,12 +14,18 @@ const fillMatrixWith_1 = (matrix: number[], left: number, top: number, width: nu
     if (!matrix[y]) {
       matrix[y] = newBitLine;
     } else {
-      if (process.env.NODE_ENV !== 'production') {
+      if (process.env.NODE_ENV === 'development') {
         const conflict = bitWiseAnd(matrix[y], newBitLine);
 
         if (conflict !== 0) {
           console.log(
-            `%c【冲突】%c 该位置已被置为1，再次设置可能是个错误。%c ${conflict.toString(2)}; id: ${currentId}`,
+            '%c【冲突】%c 该位置已被置为1，再次设置可能是个错误。\n' +
+              `%cOldBit:${matrix[y].toString(2)};\n` +
+              `%cNewBit:${newBitLine.toString(2)};\n` +
+              `%cConflictBit:${conflict.toString(2)};\n` +
+              `line: ${y};\n` +
+              `id: ${currentIdRef.current};\n` +
+              `calledBy fn: ${fromRef.current};`,
             'background: red;color:white;',
             'color: #555;',
             'color: #aaa',
@@ -93,7 +100,11 @@ export default function createMatrix(rects: Map<string, RectInMatrix>) {
   const matrix: number[] = [];
 
   rects.forEach(({ left, top, width, height }, id) => {
-    currentId = id;
+    if (process.env.NODE_ENV === 'development') {
+      currentIdRef.current = id;
+      fromRef.current = 'createMatrix';
+    }
+
     fillMatrix(matrix, 1, left, top, width, height);
   });
 

@@ -1,4 +1,4 @@
-import { fillMatrix, RectInMatrix } from './createMatrix.new';
+import { fillMatrix, RectInMatrix, currentIdRef, fromRef } from './createMatrix.new';
 
 /**
  * 完全的移动
@@ -13,7 +13,10 @@ function transformBlock(matrix: number[], from: RectInMatrix, to: RectInMatrix) 
 /**
  * 其它参数不变，只改变元素top属性
  */
-export function transformBlockTop(matrix: number[], from: RectInMatrix, to: RectInMatrix) {
+export function transformBlockTop(matrix: number[], from: RectInMatrix, to: RectInMatrix, id?: string) {
+  currentIdRef.current = id;
+  fromRef.current = 'transformBlockTop';
+
   const topDiff = to.top - from.top;
 
   if (topDiff === 0) {
@@ -22,6 +25,7 @@ export function transformBlockTop(matrix: number[], from: RectInMatrix, to: Rect
   }
 
   const changeZoneHeight = Math.abs(topDiff);
+
   const { left, width, height } = from;
 
   if (changeZoneHeight > height) {
