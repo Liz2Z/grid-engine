@@ -15,7 +15,7 @@ function checkSpaceLine(line, bitLine) {
 /**
  * 单个元素节点的掉落检测
  */
-function nodeDropDetect(matrix: number[], bitLine: number, lineIndex: number) {
+function nodeDropDetect(matrix: (number | undefined)[], bitLine: number, lineIndex: number) {
   if (lineIndex < 0) {
     // 元素已处于最顶端
     return 0;

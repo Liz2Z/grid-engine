@@ -3,7 +3,7 @@ import { fillMatrix, RectInMatrix, currentIdRef, fromRef } from './createMatrix.
 /**
  * 完全的移动
  */
-function transformBlock(matrix: number[], from: RectInMatrix, to: RectInMatrix) {
+function transformBlock(matrix: (number | undefined)[], from: RectInMatrix, to: RectInMatrix) {
   // 清零
   fillMatrix(matrix, 0, from.left, from.top, from.width, from.height);
   // 置 一
@@ -13,7 +13,7 @@ function transformBlock(matrix: number[], from: RectInMatrix, to: RectInMatrix) 
 /**
  * 其它参数不变，只改变元素top属性
  */
-export function transformBlockTop(matrix: number[], from: RectInMatrix, to: RectInMatrix, id?: string) {
+export function transformBlockTop(matrix: (number | undefined)[], from: RectInMatrix, to: RectInMatrix, id?: string) {
   currentIdRef.current = id;
   fromRef.current = 'transformBlockTop';
 

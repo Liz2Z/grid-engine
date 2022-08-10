@@ -5,22 +5,24 @@ import getBitLine from './getBitLine';
 export const currentIdRef: { current: undefined | string } = { current: undefined };
 export const fromRef: { current: undefined | string } = { current: undefined };
 
-const fillMatrixWith_1 = (matrix: number[], left: number, top: number, width: number, height: number) => {
+const fillMatrixWith_1 = (matrix: (number | undefined)[], left: number, top: number, width: number, height: number) => {
   let y = top;
   const endY = top + height;
   const newBitLine = getBitLine(width, left);
 
   do {
-    if (!matrix[y]) {
+    const line = matrix[y];
+
+    if (!line) {
       matrix[y] = newBitLine;
     } else {
       if (process.env.NODE_ENV === 'development') {
-        const conflict = bitWiseAnd(matrix[y], newBitLine);
+        const conflict = bitWiseAnd(line, newBitLine);
 
         if (conflict !== 0) {
           console.log(
             '%c【冲突】%c 该位置已被置为1，再次设置可能是个错误。\n' +
-              `%cOldBit:${matrix[y].toString(2)};\n` +
+              `%cOldBit:${line.toString(2)};\n` +
               `%cNewBit:${newBitLine.toString(2)};\n` +
               `%cConflictBit:${conflict.toString(2)};\n` +
               `line: ${y};\n` +
@@ -33,7 +35,7 @@ const fillMatrixWith_1 = (matrix: number[], left: number, top: number, width: nu
         }
       }
 
-      matrix[y] = bitWiseOr(matrix[y], newBitLine);
+      matrix[y] = bitWiseOr(line, newBitLine);
     }
 
     y += 1;
@@ -47,7 +49,7 @@ const fillMatrixWith_1 = (matrix: number[], left: number, top: number, width: nu
  */
 const BitLine_1 = 2 ** NUMBER_OF_COLOMUS - 1;
 
-const fillMatrixWith_0 = (matrix: number[], left: number, top: number, width: number, height: number) => {
+const fillMatrixWith_0 = (matrix: (number | undefined)[], left: number, top: number, width: number, height: number) => {
   let y = top;
   const endY = top + height;
   // 把 0b1111 0000 1111  位置置 0
@@ -58,11 +60,13 @@ const fillMatrixWith_0 = (matrix: number[], left: number, top: number, width: nu
   const newBitLine = bitWiseAnd(~getBitLine(width, left), BitLine_1);
 
   do {
-    if (!matrix[y]) {
-      matrix[y] = newBitLine;
-    } else {
-      matrix[y] = bitWiseAnd(matrix[y], newBitLine);
+    if (matrix[y]) {
+      matrix[y] = bitWiseAnd(matrix[y]!, newBitLine);
     }
+    // else {
+    // matrix[y] = newBitLine;
+    /* do nothing */
+    // }
 
     y += 1;
   } while (y < endY);
@@ -73,7 +77,14 @@ const fillMatrixWith_0 = (matrix: number[], left: number, top: number, width: nu
 /**
  * 填充矩阵
  * */
-export const fillMatrix = (matrix: number[], fill: 0 | 1, left: number, top: number, width: number, height: number) => {
+export const fillMatrix = (
+  matrix: (number | undefined)[],
+  fill: 0 | 1,
+  left: number,
+  top: number,
+  width: number,
+  height: number,
+) => {
   if (fill === 1) {
     return fillMatrixWith_1(matrix, left, top, width, height);
   }
@@ -96,8 +107,8 @@ export interface RectInMatrix {
  * 0 0 0 0 0 0 0
  * ```
  * */
-export default function createMatrix(rects: Map<string, RectInMatrix>) {
-  const matrix: number[] = [];
+export default function createMatrix(rects: Map<string, RectInMatrix>): (number | undefined)[] {
+  const matrix: (number | undefined)[] = [];
 
   rects.forEach(({ left, top, width, height }, id) => {
     if (process.env.NODE_ENV === 'development') {

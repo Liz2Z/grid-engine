@@ -12,6 +12,9 @@ interface CanvasBackgroundProps {
 // 写死不想动态算了
 const spacing = 3;
 
+const bg = '#fafafa';
+// const bg = '#ccc';
+
 const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ offsetTop, containerInfo }: CanvasBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { width: canvasWidth, height: canvasHeight, cellHeight, cellWidth, rowCount } = containerInfo;
@@ -31,7 +34,7 @@ const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ offsetTop, containe
     const _width = Math.round(cellWidth - spacing * 2);
     const _height = Math.round(cellHeight - spacing * 2);
 
-    context.fillStyle = '#fafafa';
+    context.fillStyle = bg;
 
     for (let i = 0; i < rowCountPlus; i += 1) {
       for (let j = 0; j < NUMBER_OF_COLOMUS; j += 1) {
