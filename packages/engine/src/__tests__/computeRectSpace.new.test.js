@@ -1,4 +1,4 @@
-import computeRectSpace from '../computeRectSpace';
+import computeRectSpace from '../computeRectSpace.new';
 export const DEFAULT_ELEMENT_HEIGHT = 8;
 export const DEFAULT_ELEMENT_WIDTH = 8;
 
