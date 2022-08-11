@@ -52,11 +52,11 @@ export function findSpaceRect(
     //
     //
     for (let l = 0, count = NUMBER_OF_COLOMUS - minWidth; l <= count; l += 1) {
-      const currentBitLine = rightShift(bitLine, l);
+      const newBitLine = rightShift(bitLine, l);
 
-      const diffResult = bitWiseAnd(bitWiseXOr(currentBitLine, result), currentBitLine);
+      const diffResult = bitWiseAnd(newBitLine, result);
 
-      if (diffResult === currentBitLine) {
+      if (diffResult === 0) {
         return {
           left: l,
           top: t,

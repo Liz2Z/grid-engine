@@ -40,7 +40,9 @@ export default function App() {
   return (
     <div>
       <div className="flex justify-between items-center  p-6">
-        <h1 className="text-4xl">Grid</h1>
+        <h1 className="text-4xl">
+          <a href="https://github.com/Liz2Z/grid-engine">Grid Engine</a>
+        </h1>
         <div>
           <button
             className="bg-slate-50 hover:bg-slate-200 active:bg-slate-100 p-1 px-2 rounded-sm text-gray-500"
