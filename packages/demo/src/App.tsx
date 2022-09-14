@@ -4,9 +4,9 @@ import Card from './Card';
 import humanId from 'human-id';
 
 const defaultLayouts = {
-  大A: { width: 10, height: 10, left: 0, top: 0 },
-  大B: { width: 10, height: 5, left: 10, top: 0 },
-  小c: { width: 10, height: 15, left: 10, top: 10 },
+  'Big A': { width: 10, height: 10, left: 0, top: 0 },
+  'Small B': { width: 10, height: 5, left: 10, top: 0 },
+  'Big C': { width: 10, height: 15, left: 10, top: 10 },
 };
 
 const getRandom = () => {

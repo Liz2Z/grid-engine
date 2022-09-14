@@ -1,4 +1,4 @@
-import { fillMatrix, RectInMatrix, currentIdRef, fromRef } from './createMatrix.new';
+import { fillMatrix, RectInMatrix, currentIdRef, fromRef, matrixToString } from './createMatrix.new';
 
 /**
  * 完全的移动
@@ -28,17 +28,19 @@ export function transformBlockTop(matrix: (number | undefined)[], from: RectInMa
 
   const { left, width, height } = from;
 
+  // 已经完全移动，没有覆盖区域
   if (changeZoneHeight > height) {
-    // 已经完全移动，没有覆盖区域
     transformBlock(matrix, from, to);
     return;
   }
 
   if (topDiff < 0) {
     // 上移
-    const _top = from.top + (height - changeZoneHeight);
+    const _top = from.top + height - changeZoneHeight;
+
     // 清零
     fillMatrix(matrix, 0, left, _top, width, changeZoneHeight);
+
     // 置一
     fillMatrix(matrix, 1, left, to.top, width, changeZoneHeight);
   } else {
@@ -46,6 +48,7 @@ export function transformBlockTop(matrix: (number | undefined)[], from: RectInMa
     fillMatrix(matrix, 0, left, from.top, width, changeZoneHeight);
     // 置一
     const _top = from.top + height;
+
     fillMatrix(matrix, 1, left, _top, width, changeZoneHeight);
   }
 }

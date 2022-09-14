@@ -1,4 +1,4 @@
-import createMatrix, { RectInMatrix } from './matrix/createMatrix.new';
+import createMatrix, { matrixToString, RectInMatrix } from './matrix/createMatrix.new';
 import { transformBlockTop } from './matrix/transform.new';
 import sortRects from './sortRects.new';
 import getBitLine from './matrix/getBitLine';
@@ -54,6 +54,10 @@ export default function handleDropEffect(rects: Map<string, RectInMatrix>) {
 
   const matrix = createMatrix(rects);
 
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`raw\n${matrixToString(matrix)}`);
+  }
+
   for (let i = 0, len = sortedRects.length; i < len; i += 1) {
     const [id, rect] = sortedRects[i];
 
@@ -64,6 +68,7 @@ export default function handleDropEffect(rects: Map<string, RectInMatrix>) {
 
     // 掉落检测后的 新定位信息
     const bitLine = getBitLine(rect.width, rect.left);
+
     const newTop = nodeDropDetect(matrix, bitLine, rect.top - 1);
 
     if (newTop === rect.top) {

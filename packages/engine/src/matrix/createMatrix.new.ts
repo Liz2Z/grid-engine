@@ -1,5 +1,5 @@
 import { NUMBER_OF_COLOMUS } from '../constants';
-import { bitWiseAnd, bitWiseOr } from '../operators';
+import { bitWiseAnd, bitWiseOr, bitWiseXOr } from '../operators';
 import getBitLine from './getBitLine';
 
 export const currentIdRef: { current: undefined | string } = { current: undefined };
@@ -55,18 +55,14 @@ const fillMatrixWith_0 = (matrix: (number | undefined)[], left: number, top: num
   // 把 0b1111 0000 1111  位置置 0
 
   // 1. 生成 0b11110000
-  // 2. 取反 0b1111 1111 1111 0000 1111，实际左侧会有很多 1
-  // 3.  0b1111 1111 1111 0000 1111 & 0b 0000 0000 1111 1111 1111 === 0b1111 0000 1111
-  const newBitLine = bitWiseAnd(~getBitLine(width, left), BitLine_1);
+  // 2. 与36位的 1 进行异或
+  // 3.  0b1111 0000 xor 0b1111 1111 1111 1111 1111 1111 1111 1111 1111 === 0b1111 1111 1111 1111 1111 1111 1111 0000 1111
+  const newBitLine = bitWiseXOr(getBitLine(width, left), BitLine_1);
 
   do {
     if (matrix[y]) {
       matrix[y] = bitWiseAnd(matrix[y]!, newBitLine);
     }
-    // else {
-    // matrix[y] = newBitLine;
-    /* do nothing */
-    // }
 
     y += 1;
   } while (y < endY);
@@ -113,11 +109,26 @@ export default function createMatrix(rects: Map<string, RectInMatrix>): (number 
   rects.forEach(({ left, top, width, height }, id) => {
     if (process.env.NODE_ENV === 'development') {
       currentIdRef.current = id;
-      fromRef.current = 'createMatrix';
+      fromRef.current = `createMatrix calledBy ${createMatrix.caller?.name}`;
     }
 
     fillMatrix(matrix, 1, left, top, width, height);
   });
 
   return matrix;
+}
+
+export function matrixToString(matrix: (number | undefined)[]) {
+  let str = '';
+
+  matrix.forEach(item => {
+    let substr = (item || getBitLine(0, 0)).toString(2);
+    substr =
+      Array(NUMBER_OF_COLOMUS - substr.length)
+        .fill(0)
+        .join('') + substr;
+    str += `${substr}\n`;
+  });
+
+  return str;
 }
