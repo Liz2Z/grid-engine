@@ -5,7 +5,8 @@
   "author": "fitz-i@foxmail.com",
   "license": "MIT",
   "scripts": {
-    "start": "cd packages/demo && pnpm run start"
+    "start": "cd packages/demo && pnpm run start",
+    "build:demo": "rm -rf ./docs/* && cd packages/demo && pnpm run build && mv ./dist/* ../../docs/*"
   },
   "devDependencies": {
     "@parcel/transformer-less": "2.4.1",
