@@ -1,4 +1,4 @@
-import './components/style.less';
+// import './components/style.less';
 
 export { default as Canvas } from './components/Canvas';
 export { default as Element } from './components/Element';

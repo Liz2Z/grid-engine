@@ -2,6 +2,7 @@ import React from 'react';
 import { Canvas, Element, GridEngine } from '@lazymonkey/grid-engine-rc';
 import Card from './Card';
 import humanId from 'human-id';
+import '@lazymonkey/grid-engine-rc/src/index.less';
 
 const defaultLayouts = {
   'Big A': { width: 10, height: 10, left: 0, top: 0 },
