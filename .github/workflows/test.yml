@@ -65,9 +65,7 @@ jobs:
         run: |
           npm install pnpm@8 -g
           pnpm i
-          ls
-          echo 11
-          cd packages/engine && ls && ls dist && pnpm pack && npm publish --dry-run
+          cd packages/engine && pnpm pack && ls -a && npm publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
   
