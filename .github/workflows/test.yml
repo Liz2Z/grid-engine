@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: engine-dist
-          path: dist
+          path: packages/engine/dist
 
       
   publish-npm:
