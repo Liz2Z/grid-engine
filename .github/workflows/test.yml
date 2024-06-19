@@ -49,8 +49,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
@@ -58,9 +60,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: engine-dist
-          needs: build
           path: packages/engine
-      - run: cd packages/engine && ls && npm pack && npm publish --dry-run
+      - name: Pack and Publish
+        run: |
+          ls
+          cd packages/engine && ls && npm pack && npm publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
   
