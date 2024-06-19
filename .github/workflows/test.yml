@@ -65,7 +65,7 @@ jobs:
         run: |
           npm install pnpm@8 -g
           pnpm i
-          cd packages/engine && pnpm publish
+          cd packages/engine && pnpm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
   
