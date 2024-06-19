@@ -1,0 +1,21 @@
+{
+  "name": "grid-engine-pack",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Grid Engine Pack",
+  "type": "module",
+  "scripts": {
+    "build:engine": "pnpm rollup --config rollup.config.engine.mjs --bundleConfigAsCjs",
+    "build:rc": "pnpm rollup --config rollup.config.rc.mjs --bundleConfigAsCjs"
+  },
+  "author": "fitz-i@foxmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.7",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.18.0",
+    "rollup-plugin-copy-assets": "^2.0.3"
+  }
+}

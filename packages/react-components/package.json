@@ -8,15 +8,14 @@
   },
   "author": "fitz-i@foxmail.com",
   "license": "MIT",
-  "bundledDependencies": [
-    "@lazymonkey/grid-engine",
-    "@lazymonkey/grid-engine-utils"
-  ],
-  "dependencies": {
-    "@lazymonkey/grid-engine": "workspace:*",
-    "@lazymonkey/grid-engine-utils": "workspace:*"
-  },
   "devDependencies": {
+    "@babel/core": "^7.12.0",
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.18.6",
+    "@lazymonkey/grid-engine": "workspace:*",
+    "@lazymonkey/grid-engine-utils": "workspace:*",
+    "@types/react": "^18.0.14",
     "classnames": "^2.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

@@ -8,14 +8,10 @@
   },
   "author": "fitz-i@foxmail.com",
   "license": "MIT",
-  "dependencies": {
-    "@lazymonkey/grid-engine-utils": "workspace:*"
-  },
-  "bundledDependencies": [
-    "@lazymonkey/grid-engine-utils"
-  ],
   "devDependencies": {
+    "@lazymonkey/grid-engine-utils": "workspace:*",
     "@babel/core": "^7.12.0",
+    "@babel/preset-env": "^7.24.7",
     "@babel/preset-typescript": "^7.18.6",
     "jest": "^28.1.3"
   }
