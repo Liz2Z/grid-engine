@@ -1,0 +1,73 @@
+name: li_test
+
+run-name: hh
+
+on: 
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
+      tags:
+        description: 'Test scenario tags'
+        required: false
+        type: boolean
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Build Engine
+        run: |
+          npm install pnpm@8 -g
+          pnpm install
+          ls
+          cd packages/rollup && pnpm run build:engine && cd ../engine/dist && ls
+      - name: Upload Dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-dist
+          path: packages/engine/dist
+
+      
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: engine-dist
+          path: packages/engine/dist
+      - name: Pack and Publish
+        run: |
+          npm install pnpm@8 -g
+          pnpm i
+          cd packages/engine && pnpm pack && ls -a && npm publish --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+  
+  
+  
