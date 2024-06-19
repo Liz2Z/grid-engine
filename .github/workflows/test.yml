@@ -22,16 +22,32 @@ on:
         description: 'Environment to run tests against'
         type: environment
         required: true
-
 jobs:
-  first_job:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: echo ${{inputs.logLevel}}
+      - run: npm install pnpm@8 -g
+      - run: cd packages/rollup
+      - run: pnpm run build:engine
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: cd packages/engine
+      - run: npm pack
+      - run: npm publish --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
   
   
   
