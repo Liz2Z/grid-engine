@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: 16
       - run: npm install pnpm@8 -g
-      - run: pnpm -v
+      - run: pnpm install
       - run: ls
       - run: cd packages/rollup && pnpm run build:engine
       
