@@ -1,6 +1,6 @@
 {
   "name": "@lazymonkey/grid-engine",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "src/index.new.ts",
   "scripts": {
@@ -8,6 +8,9 @@
   },
   "author": "fitz-i@foxmail.com",
   "license": "MIT",
+  "publishConfig": {
+    "main": "dist/index.js"
+  },
   "devDependencies": {
     "@lazymonkey/grid-engine-utils": "workspace:*",
     "@babel/core": "^7.12.0",
