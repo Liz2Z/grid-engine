@@ -31,6 +31,8 @@ jobs:
         with:
           node-version: 16
       - run: npm install pnpm@8 -g
+      - run: pnpm -v
+      - run: ls
       - run: cd packages/rollup && pnpm run build:engine
       
   publish-npm:
@@ -42,6 +44,7 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
+      - run: echo ${{secrets.NPM_AUTH_TOKEN}}
       - run: cd packages/engine && npm pack && npm publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
