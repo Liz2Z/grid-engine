@@ -37,7 +37,7 @@ jobs:
           npm install pnpm@8 -g
           pnpm install
           ls
-          cd packages/rollup && pnpm run build:engine
+          cd packages/rollup && pnpm run build:engine && cd ../engine/dist && ls
       - name: Upload Dist
         uses: actions/upload-artifact@v4
         with:
@@ -64,8 +64,10 @@ jobs:
       - name: Pack and Publish
         run: |
           npm install pnpm@8 -g
+          pnpm i
           ls
-          cd packages/engine && ls && pnpm pack && npm publish --dry-run
+          echo 11
+          cd packages/engine && ls && ls dist && pnpm pack && npm publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
   
