@@ -60,11 +60,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: engine-dist
-          path: packages/engine
+          path: packages/engine/dist
       - name: Pack and Publish
         run: |
+          npm install pnpm@8 -g
           ls
-          cd packages/engine && ls && npm pack && npm publish --dry-run
+          cd packages/engine && ls && pnpm pack && npm publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
   
