@@ -8,6 +8,9 @@
   },
   "author": "fitz-i@foxmail.com",
   "license": "MIT",
+  "repository": {
+    "url": "https://github.com/Liz2Z/grid-engine"
+  },
   "publishConfig": {
     "main": "dist/index.js"
   },
