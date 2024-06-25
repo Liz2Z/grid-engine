@@ -6,11 +6,7 @@ import { Anchor } from '../components/ResizeIndicator';
 /**
  * 矫正resize结果
  */
-const correctPosition = (
-  newPosition: Position,
-  currentPosition: Position,
-  limitRect: LimitRect
-): Position => {
+const correctPosition = (newPosition: Position, currentPosition: Position, limitRect: LimitRect): Position => {
   const result = { ...newPosition };
 
   // 左侧不允许超限
@@ -52,7 +48,7 @@ export default function useElementResizeHandler(
   limitRect: LimitRect,
   onChangeStart: () => void,
   onChange: (v: Position) => void,
-  onChangeEnd: () => void
+  onChangeEnd: () => void,
 ) {
   const workingInProgressAnchor = useRef<Anchor>();
 
@@ -62,12 +58,12 @@ export default function useElementResizeHandler(
   const handleMouseDown = useCallback(
     (event: MouseEvent) => {
       const { target } = event;
-      const { anchor } = (target as HTMLElement).dataset;
+      const { direction } = (target as HTMLElement).dataset;
 
-      workingInProgressAnchor.current = anchor as Anchor;
+      workingInProgressAnchor.current = direction as Anchor;
       onChangeStart();
     },
-    [onChangeStart]
+    [onChangeStart],
   );
 
   /**
@@ -145,7 +141,7 @@ export default function useElementResizeHandler(
 
       onChange(newPosition);
     },
-    [originalPosition, indicatorPosition, limitRect, onChange]
+    [originalPosition, indicatorPosition, limitRect, onChange],
   );
 
   /**

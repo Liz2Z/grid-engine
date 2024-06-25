@@ -5,10 +5,7 @@ import { LimitRect, Position } from '../components/Element';
 /**
  * 矫正move结果
  */
-const correctMoveLayout = (
-  position: Position,
-  limitRect: LimitRect
-): Position => {
+const correctMoveLayout = (position: Position, limitRect: LimitRect): Position => {
   const result = { ...position };
 
   // 左侧不允许超限
@@ -42,13 +39,13 @@ export default function useElementMoveHandler(
   limitRect: LimitRect,
   onChangeStart: () => void,
   onChange: (v: Position) => void,
-  onChangeEnd: () => void
+  onChangeEnd: () => void,
 ) {
   /**
    * 开始移动元素
    */
   const handleMove = useCallback(
-    (e, { directionX, directionY }) => {
+    (e: MouseEvent, { directionX, directionY }: { directionX: number; directionY: number }) => {
       const { left, top } = originalPosition;
       let newPosition = currentPosition;
 
@@ -62,7 +59,7 @@ export default function useElementMoveHandler(
 
       onChange(newPosition);
     },
-    [originalPosition, currentPosition, limitRect, onChange]
+    [originalPosition, currentPosition, limitRect, onChange],
   );
 
   const returnOnMoveStart = useMouseEvent({

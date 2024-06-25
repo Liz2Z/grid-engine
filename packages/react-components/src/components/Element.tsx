@@ -35,8 +35,7 @@ export interface Layout {
 /**
  * 用来进行CSS布局的类型。
  * 各个字段的值为浮点型。单位px;
- *
- * */
+ */
 
 export interface Position {
   width: number;
@@ -76,7 +75,7 @@ const defaultLayout = {
   height: 8,
 };
 
-const CanvasElement = ({
+export const CanvasElement = ({
   id,
   children,
   container,
@@ -123,8 +122,8 @@ const CanvasElement = ({
    * 切换hover状态
    */
   const hoverStart = useCallback(
-    e => {
-      if (isWorking || isHovering || disabled || !e.currentTarget.contains(e.target)) {
+    (e: React.MouseEvent) => {
+      if (isWorking || isHovering || disabled || !e.currentTarget.contains(e.target as HTMLElement)) {
         // 当重置大小的时候，鼠标快速移动会经常触发这个函数，
         // 但是这个时候我们没必要做任何操作，直接返回
         return;
@@ -287,4 +286,3 @@ const CanvasElement = ({
   );
 };
 
-export default React.memo(CanvasElement);

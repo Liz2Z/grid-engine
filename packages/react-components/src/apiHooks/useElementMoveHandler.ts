@@ -10,6 +10,6 @@ export const ElementMoveInteraction = React.createContext<(event: React.MouseEve
 /**
  * 用于元素拖拽移动交互
  * */
-export default function useElementMoveHandler() {
+export function useElementMoveHandler() {
   return useContext(ElementMoveInteraction);
 }

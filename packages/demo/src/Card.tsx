@@ -6,7 +6,7 @@ const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({ chi
 
   return (
     <div className="h-full relative" onMouseDown={mouseDownHandler}>
-      <div className="absolute inset-0 bg-purple-200 text-ellipsis overflow-hidden indent-1 text-xs whitespace-nowrap">
+      <div className="absolute inset-0 bg-purple-200 text-ellipsis overflow-hidden indent-1 whitespace-nowrap text-slate-700 text-lg">
         {children}
       </div>
     </div>

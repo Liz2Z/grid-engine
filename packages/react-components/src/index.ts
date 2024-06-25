@@ -1,7 +1,10 @@
-export { default as Canvas } from './components/Canvas';
-export { default as Element } from './components/Element';
+export * from './components/Canvas';
+export * from './components/Element';
+export { CanvasBackground } from './components/CanvasBackground';
 export { default as GridEngine } from '@lazymonkey/grid-engine';
-export { default as useIsWorking } from './apiHooks/useIsWorking';
-export { default as useElementSize } from './apiHooks/useElementSize';
-export { default as useElementResize } from './apiHooks/useElementResize';
-export { default as useElementMoveHandler } from './apiHooks/useElementMoveHandler';
+export { useIsWorking } from './apiHooks/useIsWorking';
+export { useElementSize } from './apiHooks/useElementSize';
+export { useElementResize } from './apiHooks/useElementResize';
+export { useElementMoveHandler } from './apiHooks/useElementMoveHandler';
+
+export type * from '@lazymonkey/grid-engine';

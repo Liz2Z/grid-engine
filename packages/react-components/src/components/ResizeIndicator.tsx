@@ -12,11 +12,10 @@ export type Anchor = ElementOf<Anchors>;
 const anchors: Anchors = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
 
 // 用于移动的线
-export type Lines = ['top', 'right', 'bottom', 'left'];
+export type Lines = ['n', 'e', 's', 'w'];
 export type Line = ElementOf<Lines>;
 
-const lines = ['top', 'right', 'bottom', 'left'];
-const linesX = ['n', 'e', 's', 'w'];
+const lines = ['n', 'e', 's', 'w'];
 
 interface Position {
   top: number;
@@ -34,25 +33,23 @@ interface ResizeIndicatorProps {
 const ResizeIndicator = ({ position, isWorking, onResizeStart }: ResizeIndicatorProps) => {
   return (
     <div className={cn('lm-grid-layout-resize-indicator', isWorking && '__active')} style={position}>
-      {anchors.map((anchor, index) => (
+      {anchors.map(anchor => (
         <div
           key={anchor}
-          data-anchor={anchor}
-          data-index={index}
+          data-direction={anchor}
           role="none"
           onMouseDown={onResizeStart}
-          className={`lm-grid-layout-resize-anchor-${anchor}`}
+          className="lm-grid-layout-resize-anchor"
         />
       ))}
 
-      {lines.map((line, index) => (
+      {lines.map(line => (
         <div
           key={line}
-          data-anchor={linesX[index]}
-          data-index={index}
+          data-direction={line}
           role="none"
           onMouseDown={onResizeStart}
-          className={`canvas-move-indicator-${line}`}
+          className="lm-grid-layout-resize-line"
         />
       ))}
     </div>

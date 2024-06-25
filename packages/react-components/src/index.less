@@ -1,11 +1,27 @@
 @primary-color: rgb(168, 85, 247);
 
+:root {
+  /* anchor */
+  --lm-resize-anchor-size: 8px;
+  --lm-resize-anchor-radius: 0px;
+  --lm-resize-anchor-bg-color: @primary-color;
+
+  /* line */
+  --lm-resize-line-size: 6px;
+
+  /* indicator */
+  --lm-resize-indicator-active-border: 1px solid @primary-color;
+  --lm-resize-indicator-active-bg-color: fade(@primary-color, 10%);
+
+  /* element */
+  --lm-element-active-border: 1px solid @primary-color;
+}
+
 .lm-grid-layout-canvas {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  z-index: 1;
 }
 
 .lm-grid-layout-canvas-track {
@@ -24,17 +40,12 @@
   position: absolute;
   background: #fff;
   border: 1px solid transparent;
-
   transition: all ease 0.15s;
 
-  &:not(.__active) {
-    transition: all ease 0.3s;
-  }
-
   &.__active {
-    // border: 1px solid @primary-color  !important;
-    border-color: @primary-color;
-    z-index: 90;
+    transition: all ease 0.3s;
+    z-index: 10;
+    border: var(--lm-element-active-border, 1px solid @primary-color);
   }
 }
 
@@ -49,14 +60,13 @@
 /*                              */
 .lm-grid-layout-resize-indicator {
   position: absolute;
-  background: fade(@primary-color, 30%);
   user-select: none;
 
   &.__active {
     cursor: move;
-    z-index: 97;
-    border: 1px solid @primary-color;
-    background: fade(@primary-color, 10%);
+    z-index: 100;
+    border: var(--lm-resize-indicator-active-border, 1px solid @primary-color);
+    background: var(--lm-resize-indicator-active-bg-color, fade(@primary-color, 10%));
   }
 }
 
@@ -71,9 +81,8 @@
 @s: s;
 @sw: sw;
 @w: w;
-@anchor-size: 8;
 
-@offset: unit(-(@anchor-size / 2), px);
+@offset: calc(var(--lm-resize-anchor-size, 8px) / -2);
 
 .resize-anchor(@mode) {
   .mixin(nw;) {
@@ -85,7 +94,7 @@
     top: @offset;
     left: 50%;
     cursor: n-resize;
-    margin-left: unit(-(@anchor-size / 2), px);
+    margin-left: @offset;
   }
   .mixin(ne;) {
     top: @offset;
@@ -96,7 +105,7 @@
     top: 50%;
     right: @offset;
     cursor: e-resize;
-    margin-top: unit(-(@anchor-size / 2), px);
+    margin-top: @offset;
   }
   .mixin(se;) {
     bottom: @offset;
@@ -107,7 +116,7 @@
     bottom: @offset;
     left: 50%;
     cursor: s-resize;
-    margin-left: unit(-(@anchor-size / 2), px);
+    margin-left: @offset;
   }
   .mixin(sw;) {
     bottom: @offset;
@@ -118,73 +127,81 @@
     top: 50%;
     left: @offset;
     cursor: w-resize;
-    margin-top: unit(-(@anchor-size / 2), px);
+    margin-top: @offset;
   }
 
-  .lm-grid-layout-resize-anchor-@{mode} {
-    position: absolute;
-    z-index: 100;
-    width: unit(@anchor-size, px);
-    height: unit(@anchor-size, px);
-    background: @primary-color;
+  .lm-grid-layout-resize-anchor[data-direction='@{mode}'] {
     .mixin(@mode);
   }
 }
 
-@modes: @nw, @n, @ne, @e, @se, @s, @sw, @w;
+@anchor-modes: @nw, @n, @ne, @e, @se, @s, @sw, @w;
 /* prettier-ignore-start */
-each(@modes, {
+each(@anchor-modes, {
     .resize-anchor(@value);
 });
 /* prettier-ignore-end */
 
-@top: top;
-@right: right;
-@bottom: bottom;
-@left: left;
-@spacing: 6; // 这个参数与卡片之间的间距有关
+.lm-grid-layout-resize-anchor {
+  position: absolute;
+  z-index: 100;
+  width: var(--lm-resize-anchor-size, 8px);
+  height: var(--lm-resize-anchor-size, 8px);
+  background: var(--lm-resize-anchor-bg-color, @primary-color);
+  border-radius: var(--lm-resize-anchor-radius, 0px);
+}
+
+@spacing: var(--lm-resize-line-size, 6px);
 
 .move-line(@mode) {
   .mixin-row(@position) {
     left: 0;
     right: 0;
-    @{position}: unit(-@spacing, px);
     height: @spacing;
   }
   .mixin-col(@position) {
     top: 0;
     bottom: 0;
-    @{position}: unit(-@spacing, px);
     width: @spacing;
   }
 
-  .mixin(top;) {
-    .mixin-row(@top);
+  .mixin(n;) {
+    .mixin-row(@n);
     cursor: n-resize;
+    top: calc(@spacing / -1);
   }
-  .mixin(bottom;) {
-    .mixin-row(@bottom);
-    cursor: s-resize;
-  }
-  .mixin(right;) {
-    .mixin-col(@right);
+
+  .mixin(e;) {
+    .mixin-col(@e);
     cursor: e-resize;
+    right: calc(@spacing / -1);
   }
-  .mixin(left;) {
-    .mixin-col(@left);
+
+  .mixin(s;) {
+    .mixin-row(@s);
+    cursor: s-resize;
+    bottom: calc(@spacing / -1);
+  }
+
+  .mixin(w;) {
+    .mixin-col(@w);
     cursor: w-resize;
+    left: calc(@spacing / -1);
   }
-  .canvas-move-indicator-@{mode} {
-    position: absolute;
-    z-index: 99;
+
+  .lm-grid-layout-resize-line[data-direction='@{mode}'] {
     .mixin(@mode);
-    // cursor: move;
   }
 }
 
-@modes2: @top, @right, @bottom, @left;
+@line-modes: @n, @e, @s, @w;
 /* prettier-ignore-start */
-each(@modes2, {
+each(@line-modes, {
   .move-line(@value);
 });
 /* prettier-ignore-end */
+
+.lm-grid-layout-resize-line {
+  position: absolute;
+  z-index: 100;
+}

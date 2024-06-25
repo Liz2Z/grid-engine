@@ -1,8 +1,10 @@
 import React from 'react';
-import { Canvas, Element, GridEngine } from '@lazymonkey/grid-engine-rc';
+import { Canvas, CanvasElement, GridEngine, CanvasBackground } from '@lazymonkey/grid-engine-rc';
 import Card from './Card';
 import humanId from 'human-id';
+
 import '@lazymonkey/grid-engine-rc/src/index.less';
+import "./app.less"
 
 const defaultLayouts = {
   'Big A': { width: 10, height: 10, left: 0, top: 0 },
@@ -15,9 +17,6 @@ const getRandom = () => {
 };
 
 
-console.log({GridEngine})
-
-// GridEngine.settings.NUMBER_OF_COLUMNS = 12;
 
 export default function App() {
   const modelRef = React.useRef<GridEngine>();
@@ -59,11 +58,11 @@ export default function App() {
         </div>
       </div>
 
-      <Canvas bg style={{ width: '100%', minHeight: '100vh' }}>
+      <Canvas Background={CanvasBackground} style={{ width: '100%', minHeight: '100vh' }}>
         {els.map(([id, layout]) => (
-          <Element id={id} key={id} layout={layout} onLayoutChange={modelRef.current?.setRect}>
+          <CanvasElement id={id} key={id} layout={layout} onLayoutChange={modelRef.current?.setRect}>
             <Card>{id}</Card>
-          </Element>
+          </CanvasElement>
         ))}
       </Canvas>
     </div>

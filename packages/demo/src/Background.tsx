@@ -1,16 +1,21 @@
+/* eslint-disable no-param-reassign */
 import React, { useEffect, useRef } from 'react';
-import { settings } from '@lazymonkey/grid-engine/src/settings';
-import { ContainerRect } from './Canvas';
+import { ContainerRect, GridEngine } from '@lazymonkey/grid-engine-rc';
 
 interface CanvasBackgroundProps {
   offsetTop: number;
   containerInfo: ContainerRect;
 }
 
+
+
+
+// TODO:平滑滚动
 const render = (context: CanvasRenderingContext2D, { offsetTop, containerInfo }: {
   containerInfo: ContainerRect
   offsetTop: number
 }) => {
+  const {settings} = GridEngine;
   const { width: canvasWidth, height: canvasHeight, cellHeight, cellWidth, rowCount } = containerInfo;
   const rowCountPlus = rowCount + 1;
 
@@ -24,23 +29,27 @@ const render = (context: CanvasRenderingContext2D, { offsetTop, containerInfo }:
   const _width = Math.round(cellWidth - settings.ELEMENT_SPACING);
   const _height = Math.round(cellHeight - settings.ELEMENT_SPACING);
 
-  context.fillStyle = 'rgba(224, 224, 224, 0.1)';
+  const lineWidth = 2;
+
+  context.setLineDash([5, 5])
+  context.strokeStyle = 'rgba(224, 224, 224, 1)';
+  context.lineWidth = lineWidth;
 
   for (let i = 0; i < rowCountPlus; i += 1) {
     for (let j = 0; j < settings.NUMBER_OF_COLUMNS; j += 1) {
-      context.fillRect(
+      context.strokeRect(
         /* x */
-        Math.round(j * cellWidth + settings.ELEMENT_SPACING / 2 ),
+        Math.round(j * cellWidth + settings.ELEMENT_SPACING / 2 + lineWidth / 2),
         /* y */
-        Math.round(i * cellHeight + settings.ELEMENT_SPACING / 2) - offset,
-        _width,
-        _height,
+        Math.round(i * cellHeight + settings.ELEMENT_SPACING / 2 + lineWidth / 2) - offset,
+        _width - lineWidth,
+        _height - lineWidth,
       );
     }
   }
 };
 
-export const CanvasBackground: React.FC<CanvasBackgroundProps> = React.memo(({ offsetTop, containerInfo }: CanvasBackgroundProps) => {
+const CanvasBackground: React.FC<CanvasBackgroundProps> = ({ offsetTop, containerInfo }: CanvasBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(
@@ -82,5 +91,6 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = React.memo(({ o
       ref={canvasRef}
     />
   );
-});
+};
 
+export default React.memo(CanvasBackground);

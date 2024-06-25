@@ -54,9 +54,9 @@ export default function handleDropEffect(rects: Map<string, RectInMatrix>) {
 
   const matrix = createMatrix(rects);
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`raw\n${matrixToString(matrix)}`);
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log(`raw\n${matrixToString(matrix)}`);
+  // }
 
   for (let i = 0, len = sortedRects.length; i < len; i += 1) {
     const [id, rect] = sortedRects[i];

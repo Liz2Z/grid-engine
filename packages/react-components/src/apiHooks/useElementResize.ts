@@ -10,9 +10,9 @@ export const ElementResizeContext = React.createContext<{
 }>({ height: 0, width: 0 });
 
 /**
- * layoutEngine接口
+ * 用于在元素layout信息改变后，通知子组件重置大小
  * */
-export default function useElementResize(fn: (size: { height: number; width: number }) => void) {
+export function useElementResize(fn: (size: { height: number; width: number }) => void) {
   const size = useContext(ElementResizeContext);
   const debounce = useDebounce();
 

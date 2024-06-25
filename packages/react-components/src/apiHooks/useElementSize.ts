@@ -4,8 +4,7 @@ import { ElementResizeContext } from './useElementResize';
 /**
  * 获取当前元素大小
  * */
-export default function useElementResize() {
+export const useElementSize = () => {
   const size = useContext(ElementResizeContext);
-
   return size;
-}
+};
