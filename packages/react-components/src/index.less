@@ -22,6 +22,8 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  /* 我们将canvas bg 的zindex设置成 -1，这里必须改成1，才能让其正常展示 */
+  z-index: 1;
 }
 
 .lm-grid-layout-canvas-track {
