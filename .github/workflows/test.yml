@@ -1,0 +1,39 @@
+name: test
+
+on: workflow_dispatch
+
+jobs:
+  try_update_file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Setup Tools
+        run: |
+          npm install pnpm@8 -g
+          pnpm install
+          ls
+      - name: Update Files
+        run: |
+          cd packages/engine 
+          npm version patch
+          cat package.json
+          # git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action[bot]"
+          git config --list | cat
+          git add .
+          git commit -m "publish version 1.0.0"
+          git push origin
+          # gh pr create --base main --head pulish_1 --title  "Publish NPM version 1.0.0"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+          
+          
+        
+
+

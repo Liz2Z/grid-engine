@@ -1,0 +1,87 @@
+name: Publish Grid Engine RC
+
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'npm version ??'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          - premajor
+          - preminor
+          - prepatch
+          - prerelease
+      preid:
+        description: 'npm version patch --preid=??'
+        required: false
+        type: string
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Build Engine RC
+        run: |
+          npm install pnpm@8 -g
+          pnpm install
+          ls
+          cd packages/rollup 
+          pnpm run build:rc 
+          cd ../react-components/dist 
+          ls
+      - name: Upload Dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-rc-dist
+          path: packages/react-components/dist
+
+      
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: engine-rc-dist
+          path: packages/react-components/dist
+      - name: Publish to NPM
+        id: publish_to_npm
+        run: |
+          npm install pnpm@8 -g
+          pnpm i
+          cd packages/react-components 
+          output_value=$(npm version ${{inputs.version}} --preid=${{inputs.preid}})
+          echo "pkg_version=$output_value" >> $GITHUB_OUTPUT
+          pnpm publish --access public --provenance --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+      - name: Push to Repo
+        run: |
+          git config --local user.name "GitHub Action[bot]"
+          git add .
+          git commit -m "publish grid-engine-rc@${{steps.publish_to_npm.outputs.pkg_version}}"
+          git push origin
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+  
+  
+  

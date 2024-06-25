@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <textarea id="id"> </textarea>
+    <script>
+      var el = document.getElementById('id');
+
+      var observer = new MutationObserver(function() {
+        console.log('chagne');
+      }); // mutation
+
+      var options = {
+        subtree: true,
+        childList: true,
+        attributes: true, // 在 ie中 ，如果要设置 attributeFilter属性，则必须设置 attributes
+        attributeFilter: ['class', 'style', 'height', 'width'],
+      };
+
+      observer.observe(el, options);
+    </script>
+  </body>
+</html>

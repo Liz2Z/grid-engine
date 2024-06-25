@@ -1,0 +1,190 @@
+@primary-color: rgb(168, 85, 247);
+
+.lm-grid-layout-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.lm-grid-layout-canvas-track {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.lm-grid-layout-element {
+  user-select: none;
+  position: absolute;
+  background: #fff;
+  border: 1px solid transparent;
+
+  transition: all ease 0.15s;
+
+  &:not(.__active) {
+    transition: all ease 0.3s;
+  }
+
+  &.__active {
+    // border: 1px solid @primary-color  !important;
+    border-color: @primary-color;
+    z-index: 90;
+  }
+}
+
+.lm-grid-layout-element-children {
+  position: relative;
+  height: 100%;
+  // overflow: hidden;
+}
+
+/*                              */
+/*        resize指示器           */
+/*                              */
+.lm-grid-layout-resize-indicator {
+  position: absolute;
+  background: fade(@primary-color, 30%);
+  user-select: none;
+
+  &.__active {
+    cursor: move;
+    z-index: 97;
+    border: 1px solid @primary-color;
+    background: fade(@primary-color, 10%);
+  }
+}
+
+/*                            */
+/*        锚点 mixin           */
+/*                            */
+@nw: nw;
+@n: n;
+@ne: ne;
+@e: e;
+@se: se;
+@s: s;
+@sw: sw;
+@w: w;
+@anchor-size: 8;
+
+@offset: unit(-(@anchor-size / 2), px);
+
+.resize-anchor(@mode) {
+  .mixin(nw;) {
+    top: @offset;
+    left: @offset;
+    cursor: nw-resize;
+  }
+  .mixin(n;) {
+    top: @offset;
+    left: 50%;
+    cursor: n-resize;
+    margin-left: unit(-(@anchor-size / 2), px);
+  }
+  .mixin(ne;) {
+    top: @offset;
+    right: @offset;
+    cursor: ne-resize;
+  }
+  .mixin(e;) {
+    top: 50%;
+    right: @offset;
+    cursor: e-resize;
+    margin-top: unit(-(@anchor-size / 2), px);
+  }
+  .mixin(se;) {
+    bottom: @offset;
+    right: @offset;
+    cursor: se-resize;
+  }
+  .mixin(s;) {
+    bottom: @offset;
+    left: 50%;
+    cursor: s-resize;
+    margin-left: unit(-(@anchor-size / 2), px);
+  }
+  .mixin(sw;) {
+    bottom: @offset;
+    left: @offset;
+    cursor: sw-resize;
+  }
+  .mixin(w;) {
+    top: 50%;
+    left: @offset;
+    cursor: w-resize;
+    margin-top: unit(-(@anchor-size / 2), px);
+  }
+
+  .lm-grid-layout-resize-anchor-@{mode} {
+    position: absolute;
+    z-index: 100;
+    width: unit(@anchor-size, px);
+    height: unit(@anchor-size, px);
+    background: @primary-color;
+    .mixin(@mode);
+  }
+}
+
+@modes: @nw, @n, @ne, @e, @se, @s, @sw, @w;
+/* prettier-ignore-start */
+each(@modes, {
+    .resize-anchor(@value);
+});
+/* prettier-ignore-end */
+
+@top: top;
+@right: right;
+@bottom: bottom;
+@left: left;
+@spacing: 6; // 这个参数与卡片之间的间距有关
+
+.move-line(@mode) {
+  .mixin-row(@position) {
+    left: 0;
+    right: 0;
+    @{position}: unit(-@spacing, px);
+    height: @spacing;
+  }
+  .mixin-col(@position) {
+    top: 0;
+    bottom: 0;
+    @{position}: unit(-@spacing, px);
+    width: @spacing;
+  }
+
+  .mixin(top;) {
+    .mixin-row(@top);
+    cursor: n-resize;
+  }
+  .mixin(bottom;) {
+    .mixin-row(@bottom);
+    cursor: s-resize;
+  }
+  .mixin(right;) {
+    .mixin-col(@right);
+    cursor: e-resize;
+  }
+  .mixin(left;) {
+    .mixin-col(@left);
+    cursor: w-resize;
+  }
+  .canvas-move-indicator-@{mode} {
+    position: absolute;
+    z-index: 99;
+    .mixin(@mode);
+    // cursor: move;
+  }
+}
+
+@modes2: @top, @right, @bottom, @left;
+/* prettier-ignore-start */
+each(@modes2, {
+  .move-line(@value);
+});
+/* prettier-ignore-end */
