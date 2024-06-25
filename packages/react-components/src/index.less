@@ -146,7 +146,7 @@ each(@anchor-modes, {
 
 .lm-grid-layout-resize-anchor {
   position: absolute;
-  z-index: 100;
+  z-index: 2;
   width: var(--lm-resize-anchor-size, 8px);
   height: var(--lm-resize-anchor-size, 8px);
   background: var(--lm-resize-anchor-bg-color, @primary-color);
@@ -205,5 +205,6 @@ each(@line-modes, {
 
 .lm-grid-layout-resize-line {
   position: absolute;
-  z-index: 100;
+  // 要低于anchor
+  z-index: 1;
 }
