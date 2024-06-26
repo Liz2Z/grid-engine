@@ -23,12 +23,12 @@ class GridEngine extends Broadcast {
   fromJSON(layouts: GridEngine.Layouts): GridEngine {
     // 存在未布局元素
     this.rects = resolveLayouts(layouts, (id: string) => {
-      this.emit('notLayout', id);
+      this.emit('layout:none', id);
     });
 
     // 解决布局冲突
     this.rects = resolvelLayoutConflicts(this.rects, () => {
-      this.emit('layoutConflict');
+      this.emit('layout:conflicted');
     });
 
     return this;
@@ -79,17 +79,17 @@ class GridEngine extends Broadcast {
   };
 
   onLayoutConflict(callback: () => void) {
-    this.on('layoutConflict', callback);
+    this.on('layout:conflicted', callback);
     return () => {
-      this.off('layoutConflict', callback);
+      this.off('layout:conflicted', callback);
     };
   }
 
   onNotLayout(callback: (id: string) => void) {
     const handler = (e: Broadcast.TriggerEvent, id: string) => callback(id);
-    this.on('notLayout', handler);
+    this.on('layout:none', handler);
     return () => {
-      this.off('notLayout', handler);
+      this.off('layout:none', handler);
     };
   }
 

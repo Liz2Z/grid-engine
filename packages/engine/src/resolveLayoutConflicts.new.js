@@ -113,7 +113,7 @@ function flushInvalidRelationship(relationship, rects) {
  * 解决原始数据中的节点布局冲突
  */
 // TODO: 性能优化
-export default function resolvelLayoutConflicts(rects, conflictHandler) {
+export default function resolveLayoutConflicts(rects, conflictHandler) {
   if (!rects.size) {
     return rects;
   }
