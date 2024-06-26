@@ -19,14 +19,12 @@ jobs:
           ls
       - name: Update Files
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo ${{secrets.GITHUB_TOKEN}}
-          echo ${{github.token}}
           cd packages/engine 
           npm version prepatch --preid=beta.2024
           cat package.json
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          gh auth setup-git
           git config --local user.name "GitHub Action[bot]"
           git config --list | cat
           git add .
