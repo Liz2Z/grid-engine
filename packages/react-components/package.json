@@ -1,6 +1,6 @@
 {
   "name": "@lazymonkey/grid-engine-rc",
-  "version": "0.0.2-beta.2406.4",
+  "version": "0.0.2-beta.2406.5",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
