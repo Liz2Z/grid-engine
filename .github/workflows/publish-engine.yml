@@ -74,13 +74,14 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
       - name: Push to Repo
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          gh auth setup-git
           git config --local user.name "GitHub Action[bot]"
           git add .
           git commit -m "publish grid-engine@${{steps.publish_to_npm.outputs.pkg_version}}"
           git push origin
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   
   
