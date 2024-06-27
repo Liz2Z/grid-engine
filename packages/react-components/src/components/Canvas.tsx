@@ -134,7 +134,7 @@ export const Canvas = ({ children, onMount = noWork, Background, className, styl
           : null}
       </div>
 
-      {containerRect && Background ? <Background offsetTop={scrollTop} containerInfo={containerRect} /> : null}
+      {containerRect && !!Background ? <Background offsetTop={scrollTop} containerInfo={containerRect} /> : null}
 
       {/* 当有子元素开始拖拽，或重置大小时，显示蒙版，不让鼠标与其它元素产生交互事件而影响执行效率 */}
       {isWorking && (

@@ -70,7 +70,7 @@ export default function useElementResizeHandler(
    * anchor mouseMove 监听函数
    */
   const handleMouseMove = useCallback(
-    (e, { directionX, directionY }) => {
+    (e: MouseEvent, { directionX, directionY }: { directionX: number; directionY: number }) => {
       const { left, top, width, height } = originalPosition;
       let newPosition = indicatorPosition;
 

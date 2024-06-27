@@ -31,8 +31,8 @@ class GridEngine extends Broadcast {
       this.emit('layout:conflicted');
     });
 
+    this.emit('data:initialized');
     this.emit('layout:changed');
-
     return this;
   }
 
@@ -44,6 +44,7 @@ class GridEngine extends Broadcast {
    */
   add(id: string, size: GridEngine.Size = _settings.ELEMENT_SIZE): GridEngine {
     appendElement(id, this.rects, size);
+    this.emit('element:added');
     this.emit('layout:changed');
     return this;
   }
@@ -51,6 +52,8 @@ class GridEngine extends Broadcast {
   rm(id: string): GridEngine {
     const stringId = String(id);
     this.rects = handleNodeRemove(this.rects, stringId);
+    this.emit('element:removed');
+    this.emit('layout:changed');
     return this;
   }
 
