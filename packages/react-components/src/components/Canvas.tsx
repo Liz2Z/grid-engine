@@ -6,16 +6,9 @@ import noWork from '@lazymonkey/grid-engine-utils/noWork';
 import useMountedState from '../hooks.common/useMountedState';
 import observeElementSize from '@lazymonkey/grid-engine-utils/elementSizeObserver';
 import useDidUpdate from '../hooks.common/useDidUpdate';
+import type * as Types from '../types';
 
 type ElementType = typeof CanvasElement;
-
-export interface ContainerRect {
-  width: number;
-  height: number;
-  cellWidth: number;
-  cellHeight: number;
-  rowCount: number;
-}
 
 export interface CanvasProps {
   children: React.ReactElement<any, ElementType> | React.ReactElement<any, ElementType>[];
@@ -25,7 +18,7 @@ export interface CanvasProps {
   onMount?: (size: { cellHeight: number; cellWidth: number }) => void;
   Background?: React.FC<{
     offsetTop: number;
-    containerInfo: ContainerRect;
+    containerInfo: Types.ContainerRect;
   }>;
 }
 
@@ -64,7 +57,10 @@ const computeElRect = (el: HTMLElement) => {
  * @param elRef track 元素
  * @param onChange
  */
-const useTrackResizeObserver = (elRef: React.RefObject<HTMLDivElement>, onChange: (val: ContainerRect) => void) => {
+const useTrackResizeObserver = (
+  elRef: React.RefObject<HTMLDivElement>,
+  onChange: (val: Types.ContainerRect) => void,
+) => {
   const isMounted = useMountedState();
   const onChangeRef = useRef(onChange);
 
@@ -93,7 +89,7 @@ const useTrackResizeObserver = (elRef: React.RefObject<HTMLDivElement>, onChange
 };
 
 export const Canvas = ({ children, onMount = noWork, Background, className, style }: CanvasProps) => {
-  const [containerRect, setContainerRect] = useState<ContainerRect>();
+  const [containerRect, setContainerRect] = useState<Types.ContainerRect>();
   const [isWorking, setIsWorking] = useState<boolean>(false);
   const [scrollTop, setScrollTop] = useState(0);
   const trackElRef = useRef<HTMLDivElement>(null);

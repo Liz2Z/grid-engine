@@ -1,14 +1,14 @@
-import { Position } from '../components/Element';
 import useDidUpdate from '../hooks.common/useDidUpdate';
 import usePrevious from '../hooks.common/usePrevious';
+import type * as Types from '../types';
 
 export default function useIndicatorPositionReset(
-  position: Position,
+  position: Types.Position,
   isWorking: boolean,
   isHovering: boolean,
   isFocusing: boolean,
   disabled: boolean,
-  setIndicatorPosition: (position: Position) => void,
+  setIndicatorPosition: (position: Types.Position) => void,
 ) {
   const previousIsWorking = usePrevious(isWorking);
 

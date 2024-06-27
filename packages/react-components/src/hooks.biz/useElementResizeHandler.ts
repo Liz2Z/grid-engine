@@ -1,12 +1,12 @@
 import { useRef, useCallback } from 'react';
 import useMouseEvent from '../hooks.common/useMouseEvent';
-import { Position, LimitRect } from '../components/Element';
 import { Anchor } from '../components/ResizeIndicator';
+import type * as Types from '../types';
 
 /**
  * 矫正resize结果，防止超出容器范围
  */
-const correctPosition = (newPosition: Position, currentPosition: Position, limitRect: LimitRect): Position => {
+const correctPosition = (newPosition: Types.Position, currentPosition: Types.Position, limitRect: Types.LimitRect): Types.Position => {
   const result = { ...newPosition };
 
   // 左侧不允许超限
@@ -43,11 +43,11 @@ const correctPosition = (newPosition: Position, currentPosition: Position, limit
 };
 
 export default function useElementResizeHandler(
-  originalPosition: Position,
-  indicatorPosition: Position,
-  limitRect: LimitRect,
+  originalPosition: Types.Position,
+  indicatorPosition: Types.Position,
+  limitRect: Types.LimitRect,
   onChangeStart: () => void,
-  onChange: (v: Position) => void,
+  onChange: (v: Types.Position) => void,
   onChangeEnd: () => void,
 ) {
   const workingInProgressAnchor = useRef<Anchor>();

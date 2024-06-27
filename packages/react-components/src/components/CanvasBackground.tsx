@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { settings } from '@lazymonkey/grid-engine/src/settings';
-import { ContainerRect } from './Canvas';
+import type * as Types from '../types';
 
 export interface CanvasBackgroundProps {
   offsetTop: number;
-  containerInfo: ContainerRect;
+  containerInfo: Types.ContainerRect;
 }
 
 const render = (
@@ -13,7 +13,7 @@ const render = (
     offsetTop,
     containerInfo,
   }: {
-    containerInfo: ContainerRect;
+    containerInfo: Types.ContainerRect;
     offsetTop: number;
   },
 ) => {

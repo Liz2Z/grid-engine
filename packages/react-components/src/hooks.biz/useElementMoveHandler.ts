@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import useMouseEvent from '../hooks.common/useMouseEvent';
-import { LimitRect, Position } from '../components/Element';
+import type * as Types from '../types';
 
 /**
  * 矫正move结果
  */
-const correctMoveLayout = (position: Position, limitRect: LimitRect): Position => {
+const correctMoveLayout = (position: Types.Position, limitRect: Types.LimitRect): Types.Position => {
   const result = { ...position };
 
   // 左侧不允许超限
@@ -34,11 +34,11 @@ const correctMoveLayout = (position: Position, limitRect: LimitRect): Position =
  *
  * */
 export default function useElementMoveHandler(
-  originalPosition: Position,
-  currentPosition: Position,
-  limitRect: LimitRect,
+  originalPosition: Types.Position,
+  currentPosition: Types.Position,
+  limitRect: Types.LimitRect,
   onChangeStart: () => void,
-  onChange: (v: Position) => void,
+  onChange: (v: Types.Position) => void,
   onChangeEnd: () => void,
 ) {
   /**

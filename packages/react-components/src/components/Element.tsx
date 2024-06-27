@@ -7,7 +7,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import cn from 'classnames';
 import noWork from '@lazymonkey/grid-engine-utils/noWork';
-import { ContainerRect } from './Canvas';
 import diffObjectValues from '@lazymonkey/grid-engine-utils/diffObjectValues';
 import ResizeIndicator from './ResizeIndicator';
 import useResizeSignal from '../hooks.biz/useResizeSignal';
@@ -20,46 +19,12 @@ import { ElementResizeContext } from '../hooks.exports/useElementResize';
 import { ElementMoveInteraction } from '../hooks.exports/useElementMoveHandler';
 import { settings } from '@lazymonkey/grid-engine/src/settings';
 import GridEngine from '@lazymonkey/grid-engine';
-
-/**
- * 用来表示元素在Canvas位置的类型。
- * 各个字段的值都是整型。
- * */
-export interface Layout {
-  width: number;
-  height: number;
-  top: number;
-  left: number;
-}
-
-/**
- * 用来进行CSS布局的类型。
- * 各个字段的值为浮点型。单位px;
- */
-
-export interface Position {
-  width: number;
-  height: number;
-  top: number;
-  left: number;
-}
-
-/**
- * 元素移动的限制区域大小
- * 缩放的限制尺寸
- *
- * */
-export interface LimitRect {
-  width: number;
-  height: number;
-  minHeight: number;
-  minWidth: number;
-}
+import type * as Types from '../types';
 
 export interface ElementProps {
   id: string;
-  container?: ContainerRect; // 由父组件注入
-  layout?: Layout;
+  container?: Types.ContainerRect; // 由父组件注入
+  layout?: Types.Layout;
   disabled?: boolean;
   children?: React.ReactNode;
   minWidth?: number;
@@ -133,15 +98,11 @@ export const CanvasElement = ({
   minWidth = 1,
 }: ElementProps) => {
   if (typeof container === 'undefined') {
-    throw Error('Canvas.Element 组件必须作为 Canvas组件的子组件使用');
+    throw Error('Canvas.Element 必须作为 Canvas 组件的子组件使用');
   }
 
-  const [isHovering, setIsHovering] = useState(false); // hover状态显示resize指示器
-  const [isWorking, setIsWorking] = useState(false); // 当resize指示器工作时
-  const canvasElRef = useRef<HTMLDivElement>(null);
-
   // 获取重置大小/位置时的限制区域
-  const limitRect = useMemo<LimitRect>(
+  const limitRect = useMemo<Types.LimitRect>(
     () => ({
       width: container.width,
       height: container.height,
@@ -152,18 +113,22 @@ export const CanvasElement = ({
   );
 
   // 元素 CSS 布局样式
-  const position = useMemo<Position>(() => {
+  const position = useMemo<Types.Position>(() => {
     const { cellHeight, cellWidth } = container;
     return layoutUnitToStyleUnit(layout, cellHeight, cellWidth, settings.ELEMENT_SPACING);
   }, [container, layout]);
+
+  const [isHovering, setIsHovering] = useState(false); // hover状态显示resize指示器
+  const [isWorking, setIsWorking] = useState(false); // 当resize指示器工作时
+  const canvasElRef = useRef<HTMLDivElement>(null);
 
   const resizeSignal = useResizeSignal(position); // 元素尺寸改变的信号，用于通知子组件重新渲染
 
   const [isFocusing, focusHandler] = useFocusHandler({ disabled, canvasElRef });
 
   // 指示器状态
-  const originalPositionRef = useRef<Position>(position);
-  const [indicatorPosition, setIndicatorPosition] = useState<Position>(position);
+  const originalPositionRef = useRef<Types.Position>(position);
+  const [indicatorPosition, setIndicatorPosition] = useState<Types.Position>(position);
 
   /**
    * 切换hover状态
@@ -212,7 +177,7 @@ export const CanvasElement = ({
    * 重新设置元素 位置、尺寸
    */
   const handleResizing = useCallback(
-    (_position: Position) => {
+    (_position: Types.Position) => {
       const { cellWidth, cellHeight } = container;
       const newRect = styleUnitToLayoutUnit(_position, cellHeight, cellWidth, settings.ELEMENT_SPACING);
       const isChanged = diffObjectValues(newRect, previousRectRef.current);
