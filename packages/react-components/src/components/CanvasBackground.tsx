@@ -2,15 +2,21 @@ import React, { useEffect, useRef } from 'react';
 import { settings } from '@lazymonkey/grid-engine/src/settings';
 import { ContainerRect } from './Canvas';
 
-interface CanvasBackgroundProps {
+export interface CanvasBackgroundProps {
   offsetTop: number;
   containerInfo: ContainerRect;
 }
 
-const render = (context: CanvasRenderingContext2D, { offsetTop, containerInfo }: {
-  containerInfo: ContainerRect
-  offsetTop: number
-}) => {
+const render = (
+  context: CanvasRenderingContext2D,
+  {
+    offsetTop,
+    containerInfo,
+  }: {
+    containerInfo: ContainerRect;
+    offsetTop: number;
+  },
+) => {
   const { width: canvasWidth, height: canvasHeight, cellHeight, cellWidth, rowCount } = containerInfo;
   const rowCountPlus = rowCount + 1;
 
@@ -30,7 +36,7 @@ const render = (context: CanvasRenderingContext2D, { offsetTop, containerInfo }:
     for (let j = 0; j < settings.NUMBER_OF_COLUMNS; j += 1) {
       context.fillRect(
         /* x */
-        Math.round(j * cellWidth + settings.ELEMENT_SPACING / 2 ),
+        Math.round(j * cellWidth + settings.ELEMENT_SPACING / 2),
         /* y */
         Math.round(i * cellHeight + settings.ELEMENT_SPACING / 2) - offset,
         _width,
@@ -40,11 +46,11 @@ const render = (context: CanvasRenderingContext2D, { offsetTop, containerInfo }:
   }
 };
 
-export const CanvasBackground: React.FC<CanvasBackgroundProps> = React.memo(({ offsetTop, containerInfo }: CanvasBackgroundProps) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+export const CanvasBackground: React.FC<CanvasBackgroundProps> = React.memo(
+  ({ offsetTop, containerInfo }: CanvasBackgroundProps) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(
-    () => {
+    useEffect(() => {
       const canvas = canvasRef.current;
       if (!canvas) {
         return;
@@ -54,33 +60,30 @@ export const CanvasBackground: React.FC<CanvasBackgroundProps> = React.memo(({ o
         return;
       }
 
-
       requestAnimationFrame(() => {
         render(context, {
           containerInfo,
-          offsetTop
+          offsetTop,
         });
       });
-    },
-    [containerInfo, offsetTop],
-  );
+    }, [containerInfo, offsetTop]);
 
-  const { width: canvasWidth, height: canvasHeight, } = containerInfo;
+    const { width: canvasWidth, height: canvasHeight } = containerInfo;
 
-  return (
-    <canvas
-      data-label="lm-bg-canvas"
-      style={{
-        display: 'block',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        zIndex: -1,
-      }}
-      width={canvasWidth}
-      height={canvasHeight}
-      ref={canvasRef}
-    />
-  );
-});
-
+    return (
+      <canvas
+        data-label="lm-bg-canvas"
+        style={{
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: -1,
+        }}
+        width={canvasWidth}
+        height={canvasHeight}
+        ref={canvasRef}
+      />
+    );
+  },
+);

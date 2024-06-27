@@ -10,14 +10,14 @@ import noWork from '@lazymonkey/grid-engine-utils/noWork';
 import { ContainerRect } from './Canvas';
 import diffObjectValues from '@lazymonkey/grid-engine-utils/diffObjectValues';
 import ResizeIndicator from './ResizeIndicator';
-import useResizeSingnal from '../hooks/useResizeSingnal';
-import useElementMoveHandler from '../hooks/useElementMoveHandler';
-import useElmentResizeInteraction from '../hooks/useElementResizeHandler';
-import useResetIndicatorPosition from '../hooks/useIndicatorPositionReset';
-import { layoutUnitToStyleUnit, styleUnitToLayoutUnit } from './unitConvert';
-import { IsWorkingContext } from '../apiHooks/useIsWorking';
-import { ElementResizeContext } from '../apiHooks/useElementResize';
-import { ElementMoveInteraction } from '../apiHooks/useElementMoveHandler';
+import useResizeSignal from '../hooks.biz/useResizeSignal';
+import useElementMoveHandler from '../hooks.biz/useElementMoveHandler';
+import useElementResizeHandler from '../hooks.biz/useElementResizeHandler';
+import useResetIndicatorPosition from '../hooks.biz/useIndicatorPositionReset';
+import { layoutUnitToStyleUnit, styleUnitToLayoutUnit } from './utils';
+import { IsWorkingContext } from '../hooks.exports/useIsWorking';
+import { ElementResizeContext } from '../hooks.exports/useElementResize';
+import { ElementMoveInteraction } from '../hooks.exports/useElementMoveHandler';
 import { settings } from '@lazymonkey/grid-engine/src/settings';
 import GridEngine from '@lazymonkey/grid-engine';
 
@@ -75,77 +75,19 @@ const defaultLayout = {
   height: 8,
 };
 
-export const CanvasElement = ({
-  id,
-  children,
-  container,
-  layout = defaultLayout,
-  disabled = false,
-  onLayoutChange = noWork,
-  onWorking = noWork,
-  minHeight = 1,
-  minWidth = 1,
-}: ElementProps) => {
-  if (typeof container === 'undefined') {
-    throw Error('Canvas.Element 组件必须作为 Canvas组件的子组件使用');
-  }
-
+const useFocusHandler = ({
+  disabled,
+  canvasElRef,
+}: {
+  disabled: boolean;
+  canvasElRef: React.RefObject<HTMLDivElement>;
+}) => {
   const [isFocusing, setIsFocusing] = useState(false); // focus状态显示边框
-  const [isHovering, setIsHovering] = useState(false); // hover状态显示resize指示器
-  const [isWorking, setIsWorking] = useState(false); // 当resize指示器工作时
-  const canvasElRef = useRef<HTMLDivElement>(null);
-
-  // 获取重置大小/位置时的限制区域
-  const limitRect = useMemo<LimitRect>(
-    () => ({
-      width: container.width,
-      height: container.height,
-      minHeight: container.cellHeight * minHeight,
-      minWidth: container.cellWidth * minWidth,
-    }),
-    [container, minHeight, minWidth],
-  );
-
-  // 元素 CSS 布局样式
-  const position = useMemo<Position>(() => {
-    const { cellHeight, cellWidth } = container;
-    return layoutUnitToStyleUnit(layout, cellHeight, cellWidth, settings.ELEMENT_SPACING);
-  }, [container, layout]);
-
-  const resizeSingal = useResizeSingnal(position); // 元素尺寸改变的信号，用于通知子组件重新渲染
-
-  // 指示器状态
-  const originalPositionRef = useRef<Position>(position);
-  const [indicatorPosition, setIndicatorPosition] = useState<Position>(position);
-
-  /**
-   * 切换hover状态
-   */
-  const hoverStart = useCallback(
-    (e: React.MouseEvent) => {
-      if (isWorking || isHovering || disabled || !e.currentTarget.contains(e.target as HTMLElement)) {
-        // 当重置大小的时候，鼠标快速移动会经常触发这个函数，
-        // 但是这个时候我们没必要做任何操作，直接返回
-        return;
-      }
-      originalPositionRef.current = position;
-      setIsHovering(true);
-      setIndicatorPosition(position);
-    },
-    [disabled, isHovering, isWorking, position],
-  );
-
-  const hoverEnd = useCallback(() => {
-    if (isWorking || disabled /* || !e.currentTarget.contains(e.target) */) {
-      return;
-    }
-    setIsHovering(false);
-  }, [disabled, isWorking]);
 
   /**
    * 当Element被点击后获得聚焦状态
    */
-  const focus = useCallback(
+  const handler = useCallback(
     (e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       if (isFocusing || disabled || (e && !e.currentTarget.contains(e.target as Node))) {
         return;
@@ -176,6 +118,77 @@ export const CanvasElement = ({
     [disabled, isFocusing],
   );
 
+  return [isFocusing, handler] as const;
+};
+
+export const CanvasElement = ({
+  id,
+  children,
+  container,
+  layout = defaultLayout,
+  disabled = false,
+  onLayoutChange = noWork,
+  onWorking = noWork,
+  minHeight = 1,
+  minWidth = 1,
+}: ElementProps) => {
+  if (typeof container === 'undefined') {
+    throw Error('Canvas.Element 组件必须作为 Canvas组件的子组件使用');
+  }
+
+  const [isHovering, setIsHovering] = useState(false); // hover状态显示resize指示器
+  const [isWorking, setIsWorking] = useState(false); // 当resize指示器工作时
+  const canvasElRef = useRef<HTMLDivElement>(null);
+
+  // 获取重置大小/位置时的限制区域
+  const limitRect = useMemo<LimitRect>(
+    () => ({
+      width: container.width,
+      height: container.height,
+      minHeight: container.cellHeight * minHeight,
+      minWidth: container.cellWidth * minWidth,
+    }),
+    [container, minHeight, minWidth],
+  );
+
+  // 元素 CSS 布局样式
+  const position = useMemo<Position>(() => {
+    const { cellHeight, cellWidth } = container;
+    return layoutUnitToStyleUnit(layout, cellHeight, cellWidth, settings.ELEMENT_SPACING);
+  }, [container, layout]);
+
+  const resizeSignal = useResizeSignal(position); // 元素尺寸改变的信号，用于通知子组件重新渲染
+
+  const [isFocusing, focusHandler] = useFocusHandler({ disabled, canvasElRef });
+
+  // 指示器状态
+  const originalPositionRef = useRef<Position>(position);
+  const [indicatorPosition, setIndicatorPosition] = useState<Position>(position);
+
+  /**
+   * 切换hover状态
+   */
+  const hoverStart = useCallback(
+    (e: React.MouseEvent) => {
+      if (isWorking || isHovering || disabled || !e.currentTarget.contains(e.target as HTMLElement)) {
+        // 当重置大小的时候，鼠标快速移动会经常触发这个函数，
+        // 但是这个时候我们没必要做任何操作，直接返回
+        return;
+      }
+      originalPositionRef.current = position;
+      setIsHovering(true);
+      setIndicatorPosition(position);
+    },
+    [disabled, isHovering, isWorking, position],
+  );
+
+  const hoverEnd = useCallback(() => {
+    if (isWorking || disabled /* || !e.currentTarget.contains(e.target) */) {
+      return;
+    }
+    setIsHovering(false);
+  }, [disabled, isWorking]);
+
   /**
    * 准备开始重置大小
    */
@@ -183,16 +196,17 @@ export const CanvasElement = ({
     originalPositionRef.current = position;
 
     if (!isFocusing) {
-      focus();
+      focusHandler();
     }
 
     onWorking(true);
     setIsWorking(true);
     setIndicatorPosition(position);
-  }, [focus, isFocusing, onWorking, position]);
+  }, [focusHandler, isFocusing, onWorking, position]);
 
   // 用于性能优化减少 props.onLayoutChange的调用次数
-  const previousResult = useRef({});
+  const previousRectRef = useRef({});
+  const previousPositionRef = useRef({});
 
   /**
    * 重新设置元素 位置、尺寸
@@ -200,15 +214,17 @@ export const CanvasElement = ({
   const handleResizing = useCallback(
     (_position: Position) => {
       const { cellWidth, cellHeight } = container;
-      const rect = styleUnitToLayoutUnit(_position, cellHeight, cellWidth, settings.ELEMENT_SPACING);
-      const isChanged = diffObjectValues(rect, previousResult.current);
-
-      previousResult.current = rect;
-      setIndicatorPosition(_position);
+      const newRect = styleUnitToLayoutUnit(_position, cellHeight, cellWidth, settings.ELEMENT_SPACING);
+      const isChanged = diffObjectValues(newRect, previousRectRef.current);
+      previousRectRef.current = newRect;
 
       if (isChanged) {
-        onLayoutChange(id, rect);
+        onLayoutChange(id, newRect);
+      } else {
       }
+
+      setIndicatorPosition(_position);
+      previousPositionRef.current = _position;
     },
     [container, id, onLayoutChange],
   );
@@ -222,7 +238,7 @@ export const CanvasElement = ({
   }, [onWorking]);
 
   // 元素重置大小交互
-  const onResizeStart = useElmentResizeInteraction(
+  const onResizeStart = useElementResizeHandler(
     originalPositionRef.current,
     indicatorPosition,
     limitRect,
@@ -271,18 +287,17 @@ export const CanvasElement = ({
         role="none"
         ref={canvasElRef}
         style={position}
-        onClick={focus}
+        onClick={focusHandler}
         className={cn('lm-grid-layout-element', isStyleActive && '__active')}
       >
-        <ElementResizeContext.Provider value={resizeSingal}>
-          <ElementMoveInteraction.Provider value={!disabled ? onMoveStart : noWork}>
+        <ElementMoveInteraction.Provider value={!disabled ? onMoveStart : noWork}>
+          <ElementResizeContext.Provider value={resizeSignal}>
             <IsWorkingContext.Provider value={isWorking}>
               <div className="lm-grid-layout-element-children">{children}</div>
             </IsWorkingContext.Provider>
-          </ElementMoveInteraction.Provider>
-        </ElementResizeContext.Provider>
+          </ElementResizeContext.Provider>
+        </ElementMoveInteraction.Provider>
       </div>
     </div>
   );
 };
-

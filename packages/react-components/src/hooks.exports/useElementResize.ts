@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import useDebounce from '../hooks/useDebounce';
+import useDebounce from '../hooks.common/useDebounce';
 
 /**
  * 用于在元素layout信息改变后，通知子组件重置大小

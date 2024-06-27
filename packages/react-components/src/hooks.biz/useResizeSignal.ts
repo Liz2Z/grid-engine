@@ -1,7 +1,7 @@
 import { useRef, useMemo } from 'react';
 import { Position } from '../components/Element';
 
-export default function useResizeSingnal(nextSize: Position) {
+export default function useResizeSignal(nextSize: Position) {
   const curSizeRef = useRef({
     width: nextSize.width,
     height: nextSize.height,
@@ -10,13 +10,10 @@ export default function useResizeSingnal(nextSize: Position) {
   /**
    * 当元素宽高改变后，触发一个信号，通过context告诉子组件需要resize
    * */
-  const resizeSingal = useMemo(() => {
+  const useResizeSignal = useMemo(() => {
     const curSize = curSizeRef.current;
 
-    if (
-      curSize.width !== nextSize.width ||
-      curSize.height !== nextSize.height
-    ) {
+    if (curSize.width !== nextSize.width || curSize.height !== nextSize.height) {
       // 尺寸发生改变，记录新的尺寸数据
       curSizeRef.current = {
         width: nextSize.width,
@@ -27,5 +24,5 @@ export default function useResizeSingnal(nextSize: Position) {
     return curSizeRef.current;
   }, [nextSize]);
 
-  return resizeSingal;
+  return useResizeSignal;
 }

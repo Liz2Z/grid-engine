@@ -3,9 +3,9 @@ import classNames from 'classnames';
 import { CanvasElement } from './Element';
 import { settings } from '@lazymonkey/grid-engine/src/settings';
 import noWork from '@lazymonkey/grid-engine-utils/noWork';
-import useMountedState from '../hooks/useMountedState';
+import useMountedState from '../hooks.common/useMountedState';
 import observeElementSize from '@lazymonkey/grid-engine-utils/elementSizeObserver';
-import useDidUpdate from '../hooks/useDidUpdate';
+import useDidUpdate from '../hooks.common/useDidUpdate';
 
 type ElementType = typeof CanvasElement;
 
@@ -16,7 +16,6 @@ export interface ContainerRect {
   cellHeight: number;
   rowCount: number;
 }
-
 
 export interface CanvasProps {
   children: React.ReactElement<any, ElementType> | React.ReactElement<any, ElementType>[];
@@ -29,8 +28,6 @@ export interface CanvasProps {
     containerInfo: ContainerRect;
   }>;
 }
-
-
 
 const computeElRect = (el: HTMLElement) => {
   const { width, height } = el.getBoundingClientRect();
@@ -58,14 +55,14 @@ const computeElRect = (el: HTMLElement) => {
     cellWidth,
     cellHeight,
     rowCount,
-  }
-}
+  };
+};
 
 /**
  * 监听dom变化以重新计算大小
- * 
+ *
  * @param elRef track 元素
- * @param onChange 
+ * @param onChange
  */
 const useTrackResizeObserver = (elRef: React.RefObject<HTMLDivElement>, onChange: (val: ContainerRect) => void) => {
   const isMounted = useMountedState();
@@ -73,7 +70,7 @@ const useTrackResizeObserver = (elRef: React.RefObject<HTMLDivElement>, onChange
 
   useEffect(() => {
     onChangeRef.current = onChange;
-  })
+  });
 
   /**
    * 监听dom变化以重新计算大小
@@ -92,15 +89,14 @@ const useTrackResizeObserver = (elRef: React.RefObject<HTMLDivElement>, onChange
       }
       onChangeRef.current(computeElRect(_el));
     });
-  }, [])
-}
+  }, []);
+};
 
 export const Canvas = ({ children, onMount = noWork, Background, className, style }: CanvasProps) => {
   const [containerRect, setContainerRect] = useState<ContainerRect>();
   const [isWorking, setIsWorking] = useState<boolean>(false);
   const [scrollTop, setScrollTop] = useState(0);
   const trackElRef = useRef<HTMLDivElement>(null);
-
 
   useTrackResizeObserver(trackElRef, setContainerRect);
 
@@ -109,15 +105,12 @@ export const Canvas = ({ children, onMount = noWork, Background, className, styl
     if (containerRect) {
       onMount(containerRect);
     }
-  }, [containerRect])
-
+  }, [containerRect]);
 
   const scrollHandler = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const { currentTarget } = e;
     setScrollTop(currentTarget.scrollTop);
   }, []);
-
-
 
   return (
     <div className={classNames('lm-grid-layout-canvas', className)} style={style}>
@@ -126,11 +119,11 @@ export const Canvas = ({ children, onMount = noWork, Background, className, styl
         {/* 先获取container的信息，然后再渲染子元素 */}
         {containerRect
           ? React.Children.map(children, child =>
-            React.cloneElement(child, {
-              onWorking: setIsWorking,
-              container: containerRect,
-            }),
-          )
+              React.cloneElement(child, {
+                onWorking: setIsWorking,
+                container: containerRect,
+              }),
+            )
           : null}
       </div>
 
@@ -152,4 +145,3 @@ export const Canvas = ({ children, onMount = noWork, Background, className, styl
     </div>
   );
 };
-

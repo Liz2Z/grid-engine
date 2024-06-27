@@ -1,6 +1,6 @@
 import { Position } from '../components/Element';
-import useDidUpdate from './useDidUpdate';
-import usePrevious from './usePrevious';
+import useDidUpdate from '../hooks.common/useDidUpdate';
+import usePrevious from '../hooks.common/usePrevious';
 
 export default function useIndicatorPositionReset(
   position: Position,

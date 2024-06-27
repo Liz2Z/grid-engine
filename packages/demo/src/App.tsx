@@ -60,7 +60,7 @@ export default function App() {
 
       <Canvas Background={CanvasBackground} style={{ width: '100%', minHeight: '100vh' }}>
         {els.map(([id, layout]) => (
-          <CanvasElement id={id} key={id} layout={layout} onLayoutChange={modelRef.current?.setRect}>
+          <CanvasElement id={id} key={id} layout={layout} onLayoutChange={modelRef.current?.setRect} minHeight={2} minWidth={2}>
             <Card>{id}</Card>
           </CanvasElement>
         ))}

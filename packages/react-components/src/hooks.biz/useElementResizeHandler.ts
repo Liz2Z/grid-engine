@@ -1,10 +1,10 @@
 import { useRef, useCallback } from 'react';
-import useMouseEvent from './useMouseEvent';
+import useMouseEvent from '../hooks.common/useMouseEvent';
 import { Position, LimitRect } from '../components/Element';
 import { Anchor } from '../components/ResizeIndicator';
 
 /**
- * 矫正resize结果
+ * 矫正resize结果，防止超出容器范围
  */
 const correctPosition = (newPosition: Position, currentPosition: Position, limitRect: LimitRect): Position => {
   const result = { ...newPosition };
