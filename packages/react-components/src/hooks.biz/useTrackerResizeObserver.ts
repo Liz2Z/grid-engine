@@ -5,7 +5,9 @@ import { settings } from '@lazymonkey/grid-engine/src/settings';
 import type * as Types from '../types';
 
 const computeElRect = (el: HTMLElement) => {
-  const { width, height } = el.getBoundingClientRect();
+  // const { height } = el.getBoundingClientRect();
+  const width = el.clientWidth;
+  const height = el.clientHeight;
   const cellWidth = width / settings.NUMBER_OF_COLUMNS;
 
   // =================  方案一  ========================
