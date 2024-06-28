@@ -46,6 +46,22 @@ const correctPosition = (
   return result;
 };
 
+const isTouchBottomCheck = ({ event, trackerEl }: { trackerEl: HTMLElement; event: MouseEvent }) => {
+  // 鼠标距离滚动容器底部还有 3px 的时候，认为触底，正常情况下这个判断依据应该是 0 ，
+  // 但是有时候会存在 1px 误差，因此这里加了 3px 的容错。
+  // 比如，当全屏幕情况，即，容器高度等于window.innerHeight，触底时的情况应该是 ：
+  // clientY === window.innerHeight，但是 clientY 总是会少 1px
+
+  const { clientY } = event;
+  const isTouchBottom = window.innerHeight - clientY <= 3;
+
+  if (isTouchBottom) {
+    return true;
+  }
+  const rect = trackerEl.getBoundingClientRect();
+  return rect.y + rect.height - clientY <= 3;
+};
+
 /**
  * resize 时，鼠标向下拖动触底后，物理上移动距离无法继续增加，所以需要通过算法补偿，以获得虚拟的移动距离
  */
@@ -76,7 +92,6 @@ const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limi
   };
 
   const trigger = ({ event, move }: { event: MouseEvent; move: { directionX: number; directionY: number } }) => {
-    const { clientY } = event;
     const { originalScrollTop, prevDirectionY, increase } = cacheRef.current;
 
     // 鼠标在起点下方
@@ -87,12 +102,7 @@ const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limi
     const isIncreaseActive = increase > 0;
 
     if (isAtBottom) {
-      // 鼠标距离滚动容器底部还有 3px 的时候，认为触底，正常情况下这个判断依据应该是 0 ，
-      // 但是有时候会存在 1px 误差，因此这里加了 3px 的容错。
-      // 比如，当全屏幕情况，即，容器高度等于window.innerHeight，触底时的情况应该是 ：
-      // clientY === window.innerHeight，但是 clientY 总是会少 1px
-      const rect = trackerEl.getBoundingClientRect();
-      const isTouchBottom = rect.y + rect.height - clientY <= 3;
+      const isTouchBottom = isTouchBottomCheck({ trackerEl, event });
 
       if (isTouchBottom) {
         // 触底, 鼠标只要移入这个区域，不再关心如何滑动
@@ -184,6 +194,10 @@ export default function useElementResizeHandler(
           };
           break;
         case 'se' /* 右下↘  */: {
+          const result = touchBottomHandler.trigger({ event, move });
+          directionY = result.directionY;
+          // directionX = result.directionX;
+
           newPosition = {
             top,
             left,
@@ -217,10 +231,6 @@ export default function useElementResizeHandler(
           break;
         }
         case 'w' /* 左👈 */:
-          const result = touchBottomHandler.trigger({ event, move });
-          directionY = result.directionY;
-          // directionX = result.directionX;
-
           newPosition = {
             ...indicatorPosition,
             left: left + directionX,
