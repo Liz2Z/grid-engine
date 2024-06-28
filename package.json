@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "demo": "cd packages/demo && pnpm run start",
-    "build:demo": "rm -rf ./docs/* && cd packages/demo && pnpm run build"
+    "build:demo": "cd packages/demo && pnpm run build"
   },
   "devDependencies": {
     "@parcel/transformer-less": "2.12.0",
