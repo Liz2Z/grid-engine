@@ -38,7 +38,11 @@ export default function useElementMoveHandler(
   currentPosition: Types.Position,
   limitRect: Types.LimitRect,
   onChangeStart: () => void,
-  onChange: (v: Types.Position) => void,
+  onChange: (v: {
+    event: MouseEvent;
+    position: Types.Position;
+    move: { directionX: number; directionY: number };
+  }) => void,
   onChangeEnd: () => void,
 ) {
   /**
@@ -57,7 +61,7 @@ export default function useElementMoveHandler(
 
       newPosition = correctMoveLayout(newPosition, limitRect);
 
-      onChange(newPosition);
+      onChange({ event: e, position: newPosition, move: { directionX, directionY } });
     },
     [originalPosition, currentPosition, limitRect, onChange],
   );

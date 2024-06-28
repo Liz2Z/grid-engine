@@ -36,6 +36,15 @@ export default function useMouseEvent({
 
     const { clientX, clientY } = event;
 
+    // 这里能得到的信息：
+    // 1. directionX > 0 代表当前鼠标在滑动起点的右方，directionX < 0 代表当前鼠标在滑动起点的左方
+    // 2. directionY > 0 代表当前鼠标在滑动起点的下方，directionY < 0 代表当前鼠标在滑动起点的上方
+    // 3. directionX 和 directionY 的绝对值越大，代表鼠标距离滑动起点越远
+    // 这里不能的到的信息：
+    // 1. directionX 和 directionY 的正负和大小并不能判断当前移动的方向
+    //
+    // 如何拿到鼠标移动的方向呢？
+    // 用户自行保存上一次的 directionX 和 directionY，然后和当前的进行比较即可
     mouseMoveRef.current(event, {
       directionX: clientX - startX.current,
       directionY: clientY - startY.current,

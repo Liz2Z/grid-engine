@@ -41,4 +41,13 @@ export interface LimitRect {
   height: number;
   minHeight: number;
   minWidth: number;
+  cellHeight: number;
+  cellWidth: number;
+}
+
+export interface ElementState {
+  isHovering: boolean;
+  isWorking: boolean;
+  isFocusing: boolean;
+  indicatorPosition: Position;
 }
