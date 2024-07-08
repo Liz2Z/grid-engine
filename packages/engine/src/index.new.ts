@@ -57,6 +57,18 @@ class GridEngine extends Broadcast {
     return this;
   }
 
+  replace(oldId:string, newId:string) {
+   const rect =  this.rects.get(oldId)
+   if(!rect) {
+    return this;
+   }
+   this.rects.delete(oldId)
+   this.rects.set(newId, rect)
+   this.emit('element:replaced');
+   this.emit('layout:changed');
+   return this;
+  }
+
   setRect = (id: string, rect: GridEngine.Rect): GridEngine => {
     const stringId = String(id);
     const nextRect = { ...rect };

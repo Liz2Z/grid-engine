@@ -5,7 +5,6 @@ import { settings } from '@lazymonkey/grid-engine/src/settings';
 import type * as Types from '../types';
 
 const computeElRect = (el: HTMLElement) => {
-  // const { height } = el.getBoundingClientRect();
   const width = el.clientWidth;
   const height = el.clientHeight;
   const cellWidth = width / settings.NUMBER_OF_COLUMNS;
@@ -15,7 +14,17 @@ const computeElRect = (el: HTMLElement) => {
   // 将布局容器固定等分（水平xx 等分，竖直 xx 等分），这样，不论容器宽高如何变化，
   // 内部元素尺寸相对容器尺寸是固定的。但是元素的自身的宽高比会随容器宽高变化而变化。
   //
-  // const cellHeight = height / NUMBER_OF_ROWS;
+  if(settings.NUMBER_OF_ROWS > 0) {
+    const cellHeight = height / settings.NUMBER_OF_ROWS;
+
+    return {
+      width,
+      height,
+      cellWidth,
+      cellHeight,
+      rowCount: settings.NUMBER_OF_ROWS,
+    };
+  }
 
   // =================  方案二  ========================
   //
