@@ -45,9 +45,8 @@ export interface LimitRect {
   cellWidth: number;
 }
 
-export interface ElementState {
-  isHovering: boolean;
-  isWorking: boolean;
-  isFocusing: boolean;
-  indicatorPosition: Position;
+export interface CanvasState {
+  hovering: string | undefined;
+  working: string | undefined;
+  focusing: string | undefined;
 }

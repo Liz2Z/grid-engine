@@ -1,14 +1,14 @@
-import { Position, Layout } from './Element';
+import type * as Types from '../types';
 
 /**
  * 将布局引擎单位转成css px 单位
  */
 export const layoutUnitToStyleUnit = (
-  layout: Layout,
+  layout: Types.Layout,
   cellHeight: number,
   cellWidth: number,
   spacing: number,
-): Position => {
+): Types.Position => {
   const { top, left, height, width } = layout;
 
   const halfSpacing = spacing / 2;
@@ -21,11 +21,11 @@ export const layoutUnitToStyleUnit = (
 };
 
 export const styleUnitToLayoutUnit = (
-  style: Position,
+  style: Types.Position,
   cellHeight: number,
   cellWidth: number,
   spacing: number,
-): Layout => {
+): Types.Layout => {
   const halfSpacing = spacing / 2;
 
   const result = {
@@ -36,4 +36,8 @@ export const styleUnitToLayoutUnit = (
   };
 
   return result;
+};
+
+export const isNil = (value: any): boolean => {
+  return value === null || value === undefined;
 };

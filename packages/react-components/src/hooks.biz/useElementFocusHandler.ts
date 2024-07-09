@@ -1,22 +1,18 @@
 import React from 'react';
-import type * as Types from '../types';
+import { useCanvasState, useDispatch } from './useCanvasState';
 
-export const useFocusHandler = ({
-  disabled,
-  isFocusing,
-  setState,
-}: {
-  disabled: boolean;
-  isFocusing: boolean;
-  setState: React.Dispatch<Partial<Types.ElementState>>;
-}) => {
+export const useFocusHandler = ({ disabled, id }: { id: string; disabled: boolean }) => {
   const elRef = React.useRef<HTMLDivElement>(null);
+  const canvasState = useCanvasState();
+  const dispatch = useDispatch();
 
   /**
    * 当Element被点击后获得聚焦状态
    */
   const handler = React.useCallback(
     (e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      const isFocusing = canvasState.focusing === id;
+
       if (isFocusing || disabled || (e && !e.currentTarget.contains(e.target as Node))) {
         return;
       }
@@ -35,15 +31,14 @@ export const useFocusHandler = ({
           return;
         }
 
-        // TODO: 组件卸载
-        setState({ isFocusing: false });
+        dispatch({ focusing: undefined });
         document.removeEventListener('mousedown', handleGlobalMouseDown);
       };
 
-      setState({ isFocusing: true });
+      dispatch({ focusing: id });
       document.addEventListener('mousedown', handleGlobalMouseDown);
     },
-    [disabled, isFocusing],
+    [disabled, id, canvasState.focusing],
   );
 
   return {
