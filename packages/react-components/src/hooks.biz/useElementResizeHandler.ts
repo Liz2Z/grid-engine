@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import useMouseEvent from '../hooks.common/useMouseEvent';
 import { Anchor } from '../components/ResizeIndicator';
 import type * as Types from '../types';
+import { settings } from '../settings';
 
 /**
  * 矫正resize结果，防止超出容器范围
@@ -51,15 +52,17 @@ const isTouchBottomCheck = ({ event, trackerEl }: { trackerEl: HTMLElement; even
   // 但是有时候会存在 1px 误差，因此这里加了 3px 的容错。
   // 比如，当全屏幕情况，即，容器高度等于window.innerHeight，触底时的情况应该是 ：
   // clientY === window.innerHeight，但是 clientY 总是会少 1px
+  const TOUCH_BOTTOM_RANGE = settings.TOUCH_BOTTOM_RANGE;
+
 
   const { clientY } = event;
-  const isTouchBottom = window.innerHeight - clientY <= 3;
+  const isTouchBottom = window.innerHeight - clientY <= TOUCH_BOTTOM_RANGE;
 
   if (isTouchBottom) {
     return true;
   }
   const rect = trackerEl.getBoundingClientRect();
-  return rect.y + rect.height - clientY <= 3;
+  return rect.y + rect.height - clientY <= TOUCH_BOTTOM_RANGE;
 };
 
 /**
@@ -101,24 +104,26 @@ const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limi
 
     const isIncreaseActive = increase > 0;
 
+    const AUTO_INCREASE_SPEED = settings.AUTO_INCREASE_SPEED;
+
     if (isAtBottom) {
       const isTouchBottom = isTouchBottomCheck({ trackerEl, event });
 
       if (isTouchBottom) {
         // 触底, 鼠标只要移入这个区域，不再关心如何滑动
-        cacheRef.current.increase += 5;
+        cacheRef.current.increase += AUTO_INCREASE_SPEED;
         trackerEl.scrollTop = originalScrollTop + cacheRef.current.increase;
       } else {
         if (isBottomToTop) {
           if (isIncreaseActive) {
-            cacheRef.current.increase -= 5;
+            cacheRef.current.increase -= AUTO_INCREASE_SPEED;
           }
         }
       }
     } else {
       if (isBottomToTop) {
         if (isIncreaseActive) {
-          cacheRef.current.increase -= 5;
+          cacheRef.current.increase -= AUTO_INCREASE_SPEED;
         }
       }
     }

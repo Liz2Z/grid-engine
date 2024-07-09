@@ -1,7 +1,7 @@
 import { useRef, useMemo } from 'react';
-import { Position } from '../components/Element';
+import * as Types from '../types'
 
-export default function useResizeSignal(nextSize: Position) {
+export default function useResizeSignal(nextSize: Types.Position) {
   const curSizeRef = useRef({
     width: nextSize.width,
     height: nextSize.height,
