@@ -14,7 +14,7 @@ const computeElRect = (el: HTMLElement) => {
   // 将布局容器固定等分（水平xx 等分，竖直 xx 等分），这样，不论容器宽高如何变化，
   // 内部元素尺寸相对容器尺寸是固定的。但是元素的自身的宽高比会随容器宽高变化而变化。
   //
-  if(settings.NUMBER_OF_ROWS > 0) {
+  if (settings.NUMBER_OF_ROWS > 0) {
     const cellHeight = height / settings.NUMBER_OF_ROWS;
 
     return {
@@ -47,36 +47,36 @@ const computeElRect = (el: HTMLElement) => {
 /**
  * 监听dom变化以重新计算大小
  *
- * @param elRef track 元素
- * @param onChange
  */
-export const useTrackResizeObserver = (
-  elRef: React.RefObject<HTMLDivElement>,
-  onChange: (val: Types.ContainerRect) => void,
-) => {
+export const useTrackResizeObserver = (): {
+  containerRect: Types.ContainerRect | undefined;
+  trackElRef: React.RefObject<HTMLDivElement>;
+} => {
+  const [containerRect, setContainerRect] = React.useState<Types.ContainerRect>();
+  const trackElRef = useRef<HTMLDivElement>(null);
   const isMounted = useMountedState();
-  const onChangeRef = useRef(onChange);
-
-  useEffect(() => {
-    onChangeRef.current = onChange;
-  });
 
   /**
    * 监听dom变化以重新计算大小
    * */
   useEffect(() => {
-    if (!elRef.current) {
+    if (!trackElRef.current) {
       return;
     }
 
     // 初始化的时候先计算一次
-    onChangeRef.current(computeElRect(elRef.current));
+    setContainerRect(computeElRect(trackElRef.current));
 
-    return observeElementSize(elRef.current, ['clientWidth', 'clientHeight'], (_el: HTMLElement) => {
+    return observeElementSize(trackElRef.current, ['clientWidth', 'clientHeight'], (_el: HTMLElement) => {
       if (!isMounted()) {
         return;
       }
-      onChangeRef.current(computeElRect(_el));
+      setContainerRect(computeElRect(_el));
     });
   }, []);
+
+  return {
+    containerRect,
+    trackElRef,
+  };
 };

@@ -54,7 +54,6 @@ const isTouchBottomCheck = ({ event, trackerEl }: { trackerEl: HTMLElement; even
   // clientY === window.innerHeight，但是 clientY 总是会少 1px
   const TOUCH_BOTTOM_RANGE = settings.TOUCH_BOTTOM_RANGE;
 
-
   const { clientY } = event;
   const isTouchBottom = window.innerHeight - clientY <= TOUCH_BOTTOM_RANGE;
 
@@ -76,6 +75,8 @@ const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limi
     increase: 0,
     /** 上一个directionY */
     prevDirectionY: 0,
+
+    timer: -1,
   });
 
   const clear = () => {
@@ -83,6 +84,7 @@ const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limi
       increase: 0,
       prevDirectionY: 0,
       originalScrollTop: 0,
+      timer: -1,
     };
   };
 
@@ -91,7 +93,24 @@ const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limi
       increase: 0,
       prevDirectionY: 0,
       originalScrollTop: trackerEl.scrollTop,
+      timer: -1,
     };
+  };
+
+  const recordTimer = () => {
+    // 保证同一时间只会有一个
+    if (cacheRef.current.timer !== -1) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      cacheRef.current.timer += 1;
+
+      if (cacheRef.current.timer >= 20) {
+      } else {
+        recordTimer();
+      }
+    });
   };
 
   const trigger = ({ event, move }: { event: MouseEvent; move: { directionX: number; directionY: number } }) => {
@@ -140,9 +159,6 @@ const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limi
 };
 
 export default function useElementResizeHandler(
-  originalPosition: Types.Position,
-  indicatorPosition: Types.Position,
-  limitRect: Types.LimitRect,
   onChangeStart: () => void,
   onChange: (v: {
     event: MouseEvent;
@@ -150,21 +166,32 @@ export default function useElementResizeHandler(
     move: { directionX: number; directionY: number };
   }) => void,
   onChangeEnd: () => void,
-  trackerEl: HTMLElement,
+  {
+    indicatorPosition,
+    limitRect,
+    trackerEl,
+  }: {
+    indicatorPosition: Types.Position;
+    limitRect: Types.LimitRect;
+    trackerEl: HTMLElement;
+  },
 ) {
   const workingInProgressAnchor = useRef<Anchor>();
   const touchBottomHandler = useTouchBottom({ trackerEl, limitRect });
+  // 当鼠标开始拖动时，要基于元素原始的位置计算当前位置
+  const originalPositionRef = useRef<Types.Position>(indicatorPosition);
 
   return useMouseEvent({
     onMouseDown: (event: MouseEvent) => {
       const { target } = event;
       const { direction } = (target as HTMLElement).dataset;
       workingInProgressAnchor.current = direction as Anchor;
+      originalPositionRef.current = indicatorPosition;
       touchBottomHandler.setup();
       onChangeStart();
     },
     onMouseMove: (event: MouseEvent, move: { directionX: number; directionY: number }) => {
-      const { left, top, width, height } = originalPosition;
+      const { left, top, width, height } = originalPositionRef.current;
       let { directionX, directionY } = move;
       let newPosition = indicatorPosition;
 

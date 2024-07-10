@@ -81,19 +81,15 @@ export const CanvasElement = ({
   const isWorking = canvasState.working === id;
   const isFocusing = canvasState.focusing === id;
 
+  const [indicatorPosition, setIndicatorPosition] = React.useState(position);
+
   /** 元素尺寸改变的信号，用于通知子组件重新渲染 */
   const resizeSignal = useResizeSignal(position);
 
-  const [indicatorPosition, setIndicatorPosition] = React.useState(position);
+  /* 元素聚焦 */
+  const focus = useFocusHandler({ disabled, id });
 
-  const { handler: focus, elRef } = useFocusHandler({ disabled, id });
-
-  // 当鼠标开始拖动时，要基于元素原始的位置计算当前位置
-  const originalPositionRef = useRef<Types.Position>(position);
-
-  /**
-   * 切换hover状态
-   */
+  /** 切换hover状态 */
   const hoverStart = useCallback(
     (e: React.MouseEvent) => {
       if (isWorking || isHovering || disabled || !e.currentTarget.contains(e.target as HTMLElement)) {
@@ -101,28 +97,23 @@ export const CanvasElement = ({
         // 但是这个时候我们没必要做任何操作，直接返回
         return;
       }
-      originalPositionRef.current = position;
-      dispatch({
-        hovering: id,
-      });
+      dispatch({ hovering: id });
       setIndicatorPosition(position);
     },
     [disabled, isHovering, isWorking, position, id],
   );
 
   const hoverEnd = useCallback(() => {
-    if (isWorking || disabled /* || !e.currentTarget.contains(e.target) */) {
+    if (isWorking || disabled) {
       return;
     }
-    dispatch({ hovering: id });
-  }, [disabled, isWorking, id]);
+    dispatch({ hovering: undefined });
+  }, [disabled, isWorking]);
 
   /**
    * 准备开始重置大小
    */
   const handleResizeStart = useCallback(() => {
-    originalPositionRef.current = position;
-
     if (!isFocusing) {
       focus();
     }
@@ -158,25 +149,17 @@ export const CanvasElement = ({
   };
 
   // 元素重置大小交互
-  const onResizeStart = useElementResizeHandler(
-    originalPositionRef.current,
+  const onResizeStart = useElementResizeHandler(handleResizeStart, handleResizing, handleResizeEnd, {
     indicatorPosition,
     limitRect,
-    handleResizeStart,
-    handleResizing,
-    handleResizeEnd,
-    containerRef.current!,
-  );
+    trackerEl: containerRef.current!,
+  });
 
   // 元素移动交互
-  const onMoveStart = useElementMoveHandler(
-    originalPositionRef.current,
-    indicatorPosition,
+  const onMoveStart = useElementMoveHandler(handleResizeStart, handleResizing, handleResizeEnd, {
+    currentPosition: indicatorPosition,
     limitRect,
-    handleResizeStart,
-    handleResizing,
-    handleResizeEnd,
-  );
+  });
 
   // 在特定情况下，重新设置指示器位置
   useResetIndicatorPosition({
@@ -191,7 +174,7 @@ export const CanvasElement = ({
 
   //
   // 因为指示器是受hover状态控制，鼠标移入显示，移出隐藏。如果将onMouseEnter 监听
-  // 放在内层 div上，当鼠标移入指示器时就会触发moveleave，导致指示器直接消失。将
+  // 放在内层 div上，当鼠标移入指示器时就会触发 mouse leave，导致指示器直接消失。将
   // onMouseEnter 监听放在外层就可以解决此问题，因为事件冒泡，只要鼠标还在外层div
   // 的子元素内，都会触发mouseEnter。
   //
@@ -205,7 +188,7 @@ export const CanvasElement = ({
       {/* 内容 */}
       <div
         role="none"
-        ref={elRef}
+        data-ge-element={id}
         style={position}
         onClick={focus}
         className={cn('lm-grid-layout-element', isElementActive && '__active')}

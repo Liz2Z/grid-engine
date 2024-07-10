@@ -1,22 +1,37 @@
 import React from 'react';
 import type * as Types from '../types';
 
-const CanvasStateContext = React.createContext<Types.CanvasState>({} as Types.CanvasState);
+export type CanvasStateDispatch = React.Dispatch<Partial<Types.CanvasState>>;
+
+const CanvasStateContext = React.createContext<readonly [Types.CanvasState, CanvasStateDispatch]>([
+  {} as Types.CanvasState,
+  () => {},
+]);
 
 export const CanvasStateProvider = CanvasStateContext.Provider;
 
-export const useCanvasState = () => {
-  return React.useContext(CanvasStateContext);
+export const useCanvasStateReducer = () => {
+  const [state, dispatch] = React.useReducer(
+    (state: Types.CanvasState, partial: Partial<Types.CanvasState>): Types.CanvasState => ({
+      ...state,
+      ...partial,
+    }),
+    {
+      hovering: undefined,
+      working: undefined,
+      focusing: undefined,
+    },
+  );
+
+  const ctx = React.useMemo(() => [state, dispatch] as const, [state, dispatch]);
+
+  return ctx;
 };
 
-export type CanvasStateDispatch = React.Dispatch<Partial<Types.CanvasState>>;
-
-const DispatchContext = React.createContext<CanvasStateDispatch>(() => {
-  /*  */
-});
-
-export const DispatchProvider = DispatchContext.Provider;
+export const useCanvasState = () => {
+  return React.useContext(CanvasStateContext)[0];
+};
 
 export const useDispatch = () => {
-  return React.useContext(DispatchContext);
+  return React.useContext(CanvasStateContext)[1];
 };

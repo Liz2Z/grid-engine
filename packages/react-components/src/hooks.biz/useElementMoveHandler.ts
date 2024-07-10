@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import React from 'react';
 import useMouseEvent from '../hooks.common/useMouseEvent';
 import type * as Types from '../types';
 
@@ -34,9 +34,6 @@ const correctMoveLayout = (position: Types.Position, limitRect: Types.LimitRect)
  *
  * */
 export default function useElementMoveHandler(
-  originalPosition: Types.Position,
-  currentPosition: Types.Position,
-  limitRect: Types.LimitRect,
   onChangeStart: () => void,
   onChange: (v: {
     event: MouseEvent;
@@ -44,17 +41,27 @@ export default function useElementMoveHandler(
     move: { directionX: number; directionY: number };
   }) => void,
   onChangeEnd: () => void,
+  {
+    currentPosition,
+    limitRect,
+  }: {
+    currentPosition: Types.Position;
+    limitRect: Types.LimitRect;
+  },
 ) {
+  // 当鼠标开始拖动时，要基于元素原始的位置计算当前位置
+  const originalPositionRef = React.useRef<Types.Position>(currentPosition);
+
   /**
    * 开始移动元素
    */
-  const handleMove = useCallback(
+  const handleMove = React.useCallback(
     (e: MouseEvent, { directionX, directionY }: { directionX: number; directionY: number }) => {
-      const { left, top } = originalPosition;
+      const { left, top } = originalPositionRef.current;
       let newPosition = currentPosition;
 
       newPosition = {
-        ...originalPosition,
+        ...originalPositionRef.current,
         top: top + directionY,
         left: left + directionX,
       };
@@ -63,11 +70,14 @@ export default function useElementMoveHandler(
 
       onChange({ event: e, position: newPosition, move: { directionX, directionY } });
     },
-    [originalPosition, currentPosition, limitRect, onChange],
+    [currentPosition, limitRect, onChange],
   );
 
   const returnOnMoveStart = useMouseEvent({
-    onMouseDown: onChangeStart,
+    onMouseDown: () => {
+      originalPositionRef.current = currentPosition;
+      onChangeStart();
+    },
     onMouseMove: handleMove,
     onMouseUp: onChangeEnd,
   });
