@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { CanvasElement } from './Element';
+import { CanvasElement, ElementProps } from './Element';
 import noWork from '@lazymonkey/grid-engine-utils/noWork';
 import useDidUpdate from '../hooks.common/useDidUpdate';
 import type * as Types from '../types';
@@ -9,11 +9,12 @@ import { CanvasStateProvider, useCanvasStateReducer } from '../hooks.biz/useCanv
 import { isNil } from './utils';
 import { useTrackerScrollHandler } from '../hooks.biz/useTrackerScrollHandler';
 import { useGlobalBlurHandler } from '../hooks.biz/useGlobalBlurHandler';
+import { settings } from '../settings';
 
 type ElementType = typeof CanvasElement;
 
 export interface CanvasProps {
-  children: React.ReactElement<any, ElementType> | React.ReactElement<any, ElementType>[];
+  children: React.ReactElement<ElementProps, ElementType> | React.ReactElement<ElementProps, ElementType>[];
   className?: string;
   style?: React.CSSProperties;
 
@@ -40,6 +41,8 @@ export const Canvas = ({ children, onMount = noWork, Background, className, styl
     }
   }, [containerRect]);
 
+  let top = 0;
+
   return (
     <CanvasStateProvider value={ctx}>
       <div className={classNames('lm-grid-layout-canvas', className)} style={style}>
@@ -47,13 +50,29 @@ export const Canvas = ({ children, onMount = noWork, Background, className, styl
           {/* 子元素需要根据container的宽高布局来计算，所以需要等待container dom挂载之后 ， */}
           {/* 先获取container的信息，然后再渲染子元素 */}
           {containerRect
-            ? React.Children.map(children, child =>
-                React.cloneElement(child, {
+            ? React.Children.map(children, child => {
+                const current = (child.props.layout?.top || 0) + (child.props.layout?.height || 0);
+                if (current > top) {
+                  top = current;
+                }
+
+                return React.cloneElement(child, {
                   containerRect: containerRect,
                   containerRef: trackElRef,
-                }),
-              )
+                });
+              })
             : null}
+
+          {/* 始终在底部保留额外的空行 */}
+          <div
+            style={{
+              pointerEvents: 'none',
+              width: 1,
+              height: 1,
+              position: 'absolute',
+              top: (top + settings.EXTRA_ROWS) * (containerRect?.cellHeight || 0),
+            }}
+          ></div>
         </div>
 
         {containerRect && !!Background ? <Background offsetTop={scrollTop} containerInfo={containerRect} /> : null}

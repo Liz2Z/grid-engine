@@ -52,7 +52,7 @@ const isTouchBottomCheck = ({ event, trackerEl }: { trackerEl: HTMLElement; even
   // 但是有时候会存在 1px 误差，因此这里加了 3px 的容错。
   // 比如，当全屏幕情况，即，容器高度等于window.innerHeight，触底时的情况应该是 ：
   // clientY === window.innerHeight，但是 clientY 总是会少 1px
-  const TOUCH_BOTTOM_RANGE = settings.TOUCH_BOTTOM_RANGE;
+  const TOUCH_BOTTOM_RANGE = settings.TOUCH_BOTTOM_RANGE; /* 默认 3px */
 
   const { clientY } = event;
   const isTouchBottom = window.innerHeight - clientY <= TOUCH_BOTTOM_RANGE;
@@ -72,7 +72,6 @@ const defaultState = () => ({
   /* 记录鼠标移动的信息 */
   prevMove: { directionX: 0, directionY: 0 },
   /* 鼠标移动到底部后，固定不动一定时间后，自动触发滚动事件 */
-  loopTimes: 0,
   hasTimer: false,
   frameTimestamp: 0,
 });
@@ -109,13 +108,10 @@ const useTouchBottom = ({
         return;
       }
 
-      // 有的时候，requestAnimationFrame 执行间隔仅有 0。0000000000000x ms，因此这里需要做个截流
-      if (timestamp - cacheRef.current.frameTimestamp > 16) {
-        cacheRef.current.loopTimes += 1;
+      // 有的时候，requestAnimationFrame 执行间隔仅有 0.0000000000000x ms，因此这里需要做个截流
+      if (timestamp - cacheRef.current.frameTimestamp > 11) {
         cacheRef.current.frameTimestamp = timestamp;
-      }
 
-      if (cacheRef.current.loopTimes % 5 === 0 /* 每 5 * 16ms = 80ms触发一次 */) {
         // 开始触发
         const { originalScrollTop, prevMove } = cacheRef.current;
         const AUTO_INCREASE_SPEED = settings.AUTO_INCREASE_SPEED;
@@ -135,7 +131,6 @@ const useTouchBottom = ({
 
   const resetTimer = () => {
     cacheRef.current.hasTimer = false;
-    cacheRef.current.loopTimes = 0;
     cacheRef.current.frameTimestamp = 0;
   };
 
