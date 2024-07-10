@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import useMouseEvent from '../hooks.common/useMouseEvent';
 import { Anchor } from '../components/ResizeIndicator';
 import type * as Types from '../types';
@@ -64,57 +64,101 @@ const isTouchBottomCheck = ({ event, trackerEl }: { trackerEl: HTMLElement; even
   return rect.y + rect.height - clientY <= TOUCH_BOTTOM_RANGE;
 };
 
+const defaultState = () => ({
+  /** 记录 mousedown 时容器的 scrollTop */
+  originalScrollTop: 0,
+  /** 记录该 hook 内部增量 */
+  increase: 0,
+  /* 记录鼠标移动的信息 */
+  prevMove: { directionX: 0, directionY: 0 },
+  /* 鼠标移动到底部后，固定不动一定时间后，自动触发滚动事件 */
+  loopTimes: 0,
+  hasTimer: false,
+  frameTimestamp: 0,
+});
+
 /**
  * resize 时，鼠标向下拖动触底后，物理上移动距离无法继续增加，所以需要通过算法补偿，以获得虚拟的移动距离
  */
-const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limitRect: Types.LimitRect }) => {
-  const cacheRef = useRef({
-    /** 记录 mousedown 时容器的 scrollTop */
-    originalScrollTop: 0,
-    /** 记录该 hook 内部增量 */
-    increase: 0,
-    /** 上一个directionY */
-    prevDirectionY: 0,
+const useTouchBottom = ({
+  trackerEl,
+  limitRect,
+  onChange,
+}: {
+  trackerEl: HTMLElement;
+  limitRect: Types.LimitRect;
+  onChange: (move: { directionX: number; directionY: number }) => void;
+}) => {
+  const cacheRef = useRef(defaultState());
+  const onChangeRef = useRef(onChange);
 
-    timer: -1,
+  useEffect(() => {
+    onChangeRef.current = onChange;
   });
-
-  const clear = () => {
-    cacheRef.current = {
-      increase: 0,
-      prevDirectionY: 0,
-      originalScrollTop: 0,
-      timer: -1,
-    };
-  };
-
-  const setup = () => {
-    cacheRef.current = {
-      increase: 0,
-      prevDirectionY: 0,
-      originalScrollTop: trackerEl.scrollTop,
-      timer: -1,
-    };
-  };
 
   const recordTimer = () => {
     // 保证同一时间只会有一个
-    if (cacheRef.current.timer !== -1) {
+    if (cacheRef.current.hasTimer) {
       return;
     }
 
-    requestAnimationFrame(() => {
-      cacheRef.current.timer += 1;
+    cacheRef.current.hasTimer = true;
 
-      if (cacheRef.current.timer >= 20) {
-      } else {
-        recordTimer();
+    requestAnimationFrame(timestamp => {
+      if (!cacheRef.current.hasTimer) {
+        return;
       }
+
+      // 有的时候，requestAnimationFrame 执行间隔仅有 0。0000000000000x ms，因此这里需要做个截流
+      if (timestamp - cacheRef.current.frameTimestamp > 16) {
+        cacheRef.current.loopTimes += 1;
+        cacheRef.current.frameTimestamp = timestamp;
+      }
+
+      if (cacheRef.current.loopTimes % 5 === 0 /* 每 5 * 16ms = 80ms触发一次 */) {
+        // 开始触发
+        const { originalScrollTop, prevMove } = cacheRef.current;
+        const AUTO_INCREASE_SPEED = settings.AUTO_INCREASE_SPEED;
+        cacheRef.current.increase += AUTO_INCREASE_SPEED;
+        trackerEl.scrollTop = originalScrollTop + cacheRef.current.increase;
+
+        onChangeRef.current({
+          ...prevMove,
+          directionY: prevMove.directionY + cacheRef.current.increase,
+        });
+      }
+
+      cacheRef.current.hasTimer = false;
+      recordTimer();
     });
   };
 
+  const resetTimer = () => {
+    cacheRef.current.hasTimer = false;
+    cacheRef.current.loopTimes = 0;
+    cacheRef.current.frameTimestamp = 0;
+  };
+
+  /* 初始化状态，准备 */
+  const setup = () => {
+    cacheRef.current = defaultState();
+    cacheRef.current.originalScrollTop = trackerEl.scrollTop;
+  };
+
+  const clear = () => {
+    cacheRef.current = defaultState();
+  };
+
   const trigger = ({ event, move }: { event: MouseEvent; move: { directionX: number; directionY: number } }) => {
-    const { originalScrollTop, prevDirectionY, increase } = cacheRef.current;
+    const {
+      originalScrollTop,
+      prevMove: { directionY: prevDirectionY },
+      increase,
+    } = cacheRef.current;
+
+    cacheRef.current.prevMove = move;
+
+    resetTimer();
 
     // 鼠标在起点下方
     const isAtBottom = move.directionY >= 0;
@@ -129,9 +173,10 @@ const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limi
       const isTouchBottom = isTouchBottomCheck({ trackerEl, event });
 
       if (isTouchBottom) {
-        // 触底, 鼠标只要移入这个区域，不再关心如何滑动
+        // 触底, 鼠标只要移入这个区域，不再关心具体滑动方向，都认为是向下划动
         cacheRef.current.increase += AUTO_INCREASE_SPEED;
         trackerEl.scrollTop = originalScrollTop + cacheRef.current.increase;
+        recordTimer();
       } else {
         if (isBottomToTop) {
           if (isIncreaseActive) {
@@ -147,8 +192,6 @@ const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limi
       }
     }
 
-    cacheRef.current.prevDirectionY = move.directionY;
-
     return {
       directionX: move.directionX,
       directionY: move.directionY + cacheRef.current.increase,
@@ -160,11 +203,7 @@ const useTouchBottom = ({ trackerEl, limitRect }: { trackerEl: HTMLElement; limi
 
 export default function useElementResizeHandler(
   onChangeStart: () => void,
-  onChange: (v: {
-    event: MouseEvent;
-    position: Types.Position;
-    move: { directionX: number; directionY: number };
-  }) => void,
+  onChange: (v: { position: Types.Position; move: { directionX: number; directionY: number } }) => void,
   onChangeEnd: () => void,
   {
     indicatorPosition,
@@ -176,10 +215,25 @@ export default function useElementResizeHandler(
     trackerEl: HTMLElement;
   },
 ) {
+  /* 记录鼠标拖拽的锚地的方向 */
   const workingInProgressAnchor = useRef<Anchor>();
-  const touchBottomHandler = useTouchBottom({ trackerEl, limitRect });
-  // 当鼠标开始拖动时，要基于元素原始的位置计算当前位置
+  /* 记录鼠标开始拖动时原始位置，后续的计算依赖此数据 */
   const originalPositionRef = useRef<Types.Position>(indicatorPosition);
+
+  const touchBottomHandler = useTouchBottom({
+    trackerEl,
+    limitRect,
+    onChange: (move: { directionX: number; directionY: number }) => {
+      const { height } = originalPositionRef.current;
+
+      const newPosition = {
+        ...indicatorPosition,
+        height: height + move.directionY,
+      };
+
+      onChange({ move, position: newPosition });
+    },
+  });
 
   return useMouseEvent({
     onMouseDown: (event: MouseEvent) => {
@@ -276,7 +330,6 @@ export default function useElementResizeHandler(
       newPosition = correctPosition(newPosition, indicatorPosition, limitRect);
 
       onChange({
-        event: event,
         move: { directionX, directionY },
         position: newPosition,
       });
