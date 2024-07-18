@@ -28,6 +28,21 @@ const computeElRect = (el: HTMLElement) => {
 
   // =================  方案二  ========================
   //
+  // 布局容器垂直 xx 等分，网格宽度随容器宽度变化，但高度固定
+  // 这样在容器宽度变化时，垂直方向上的可视元素数量不变，不保证元素的宽高比
+  //
+  if (settings.CELL_HEIGHT) {
+    return {
+      width,
+      height,
+      cellWidth,
+      cellHeight: settings.CELL_HEIGHT + settings.ELEMENT_SPACING,
+      rowCount: Math.ceil(height / settings.CELL_HEIGHT),
+    };
+  }
+
+  // =================  方案三  ========================
+  //
   // 假设为正方形，即高度===宽度，求出有竖列上有多少个单元格，舍弃小数位
   // 根据纵向单元格数量矫正单元格精确高度。这样我们第一屏上始终都是完整的单元格，
   // 且能让卡片在不同容器大小的情况下保证宽高比。
